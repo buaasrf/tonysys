@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="GBK"?>
 <configuration scan="true">
 
-    <include resource="adlog.xml" />
+    <include resource="tonysyslog.xml" />
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -9,32 +9,30 @@
         </encoder>
     </appender>
 
-    <logger name="com.dajie.ads" level="INFO"/>
-    <logger name="com.dajie.ads.service.impl.AdSearchControlServiceDirectionalImpl" level="DEBUG"/>
-    <logger name="com.dajie.ads.servlet.AdShowServlet" level="DEBUG"/>
-    <logger name="com.dajie.ads.dao.impl.AdItemDaoImpl" level="DEBUG"/>
-    <logger name="com.dajie.ads.dao.impl.AdBoxDaoImpl" level="DEBUG"/>
-    <logger name="uis.spend" level="INFO"/>
-    <logger name="match" level="INFO"/>
+    <logger name="com.tonysys.admin" level="INFO"/>
+    <logger name="com.tonysys.admin.dao" level="DEBUG"/>
+    <logger name="com.tonysys.admin.service" level="DEBUG"/>
+    <logger name="com.tonysys.admin.controller" level="DEBUG"/>
+
 
     <root>
-        <level value="ERROR"/>
+        <level value="DEBUG"/>
         <appender-ref ref="CONSOLE"/>
     </root>
 
     <!--business log-->
     <appender name="businessLog" class="ch.qos.logback.core.FileAppender">
-        <file>/ROOT/logs/q.ads.dajie.com/business.log</file>
+        <file>/ROOT/logs/tonysys.com/business.log</file>
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>/ROOT/logs/q.ads.dajie.com/business.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>/ROOT/logs/tonysys.com/business.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
         <encoder>
             <pattern>%d{HH:mm:ss.SSS}\t%msg%n</pattern>
         </encoder>
     </appender>
-    <logger name="com.dajie.ads.servlet.AdShowServlet" level="DEBUG">
+    <logger name="com.tonysys.admin.service" level="DEBUG">
         <appender-ref ref="businessLog"/>
     </logger>
 
