@@ -1,0 +1,17 @@
+<included>
+    <appender name="tonysys_appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${dauth.log.dir}/ad_visit.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${dauth.log.dir}/ad_visit.%d{yyyy-MM-dd}.log</FileNamePattern>
+        </rollingPolicy>
+
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%logger %d{yyyy-MM-dd HH:mm:ss} %msg%n</Pattern>
+        </layout>
+    </appender>
+
+    <logger name="tonysys" level="info">
+        <appender-ref ref="tonysys_appender" />
+    </logger>
+
+</included>

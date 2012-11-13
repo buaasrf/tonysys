@@ -17,13 +17,13 @@
         <property name="location" value="classpath:config.properties"/>
     </bean>
 
-    <context:component-scan base-package="com.dajie.ads.dao,com.dajie.ads.service"/>
+    <context:component-scan base-package="com.tonysys.admin.dao,com.tonysys.admin.controller,com.tonysys.admin.service"/>
 
-    <bean id="dauthDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
-        <property name="driverClass" value="${dauth.driver}"/>
-        <property name="jdbcUrl" value="${dauth.url}"/>
-        <property name="user" value="${dauth.user}"/>
-        <property name="password" value="${dauth.passwd}"/>
+    <bean id="tonysysDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${tonysys.driver}"/>
+        <property name="jdbcUrl" value="${tonysys.url}"/>
+        <property name="user" value="${tonysys.user}"/>
+        <property name="password" value="${tonysys.passwd}"/>
         <property name="minPoolSize" value="1"/>
         <property name="maxPoolSize" value="5"/>
         <property name="maxIdleTime" value="1800"/>
@@ -39,18 +39,18 @@
         <property name="checkoutTimeout" value="100000"/>
     </bean>
 
-    <bean id="dauthJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-        <property name="dataSource" ref="dauthDataSource"/>
+    <bean id="tonysysJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="tonysysDataSource"/>
     </bean>
 
     <!-- 配置事务管理器 -->
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource">
-            <ref bean="dauthDataSource"/>
+            <ref bean="tonysysDataSource"/>
         </property>
     </bean>
     <!--  配置事务传播特性 -->
-    <tx:advice id="dauthAdvice" transaction-manager="transactionManager">
+    <tx:advice id="tonysysAdvice" transaction-manager="transactionManager">
         <tx:attributes>
             <tx:method name="save*" propagation="REQUIRED"/>
             <tx:method name="del*" propagation="REQUIRED"/>
@@ -60,26 +60,9 @@
     </tx:advice>
     <!--  配置参与事务的类 -->
     <aop:config>
-        <aop:pointcut id="allTestServiceMethod" expression="execution(* com.dajie.dauth.service.*.*(..))"/>
-        <aop:advisor pointcut-ref="allTestServiceMethod" advice-ref="dauthAdvice" />
+        <aop:pointcut id="allTestServiceMethod" expression="execution(* com.tonysys.admin.service.*.*(..))"/>
+        <aop:advisor pointcut-ref="allTestServiceMethod" advice-ref="tonysysAdvice" />
     </aop:config>
-
-    <bean id="userInfoService" class="com.dajie.ads.uis.service.UserInfoServiceFactory"
-          factory-method="getUserInfoService">
-        <constructor-arg index="0" value="${uis.server.host}"/>
-        <constructor-arg index="1" value="${uis.server.port}"/>
-        <constructor-arg index="2" value="1"/>
-        <constructor-arg index="3" value="1000"/>
-        <constructor-arg index="4" value="1000"/>
-    </bean>
-
-    <bean id="adItemSearchClient" class="com.dajie.asn.search.SearchClient">
-        <property name="addresses">
-            <list>
-                <value>${asn.server.instance}</value>
-            </list>
-        </property>
-    </bean>
 
 
     <ehcache:annotation-driven cache-manager="ehCacheManager"/>
