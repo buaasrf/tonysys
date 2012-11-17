@@ -9,6 +9,14 @@ package com.tonysys.admin.model;
  * To change this template use File | Settings | File Templates.
  */
 public class Dormitory {
+    /*************** 定义宿舍表及其属性名称********************************/
+    public static final String TABLENAME="dormitory";
+    public static final String ID="id";
+    public static final String BUILDING="building";
+    public static final String ROOM="room";
+    public static final String DOOR="door";
+    public static final String BEDNUMBER="bednumber";
+    /*************************************************/
     private Integer id;
     private String building;
     private String room;

@@ -11,7 +11,13 @@
                   overflowToDisk="false" diskPersistent="false" timeToIdleSeconds="0"
                   timeToLiveSeconds="86400" memoryStoreEvictionPolicy="LRU"/>
 
-    <cache name="dauthAppCache" maxElementsInMemory="100"
+    <cache name="userCache" maxElementsInMemory="10000"
+           overflowToDisk="false" diskPersistent="false"
+           timeToLiveSeconds="86400"/>
+    <cache name="dormitoryCache" maxElementsInMemory="10000"
+           overflowToDisk="false" diskPersistent="false"
+           timeToLiveSeconds="86400"/>
+    <cache name="conductScoreCache" maxElementsInMemory="10000"
            overflowToDisk="false" diskPersistent="false"
            timeToLiveSeconds="86400"/>
 

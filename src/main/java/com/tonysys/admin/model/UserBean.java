@@ -15,6 +15,39 @@ public class UserBean {
     /**
      * 
      */
+    public static final String TABLENAME="user";
+    public static final String ID="id";
+    public static final String TYPE="type";
+    public static final String NUMBER="number";
+    public static final String PASSWORD="password";
+    public static final String DEPT="dept";
+    public static final String TRAININGLEVEL="trainingLevel";
+    public static final String SUBJECT="subject";
+    public static final String GRADE="grade";
+    public static final String STATE="state";
+    public static final String GENDER="gender";
+    public static final String NATION="nation";
+    public static final String PROVINCE="province";
+    public static final String BIRTH="birth";
+    public static final String IDNUMBER="idNumber";
+    public static final String CANDIDATENUMBER="candidateNumber";
+    public static final String EXAMNUMBER="examNumber";
+    public static final String POLITICSSTATUS="politicsStatus";
+    public static final String EMAIL="email";
+    public static final String PHONE="phone";
+    public static final String HOMEPHONE="homePhone";
+    public static final String REMARK="remark";
+    public static final String FATHERNAME="fatherName";
+    public static final String FATHERPHONE="fatherPhone";
+    public static final String MOTHERNAME="motherName";
+    public static final String MOTHERPHONE="motherPhone";
+    public static final String DESCRITION="descrition";
+    public static final String UPDATEBY="updateBy";
+    public static final String UPDATEDATE="updateDate";
+    public static final String CREATEBY="createBy";
+    public static final String CREATEDATE="createDate";
+    public static final String DORMITORYID="dormitoryid";
+
     private static final long serialVersionUID = -7558233566805685694L;
     
     private long id;

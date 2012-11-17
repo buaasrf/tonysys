@@ -15,6 +15,22 @@ public class ConductScore{
     /**
      * 
      */
+    public static final String tablename="conduct_score";
+    public static final String ID="id";
+    public static final String TYPE="type";
+    public static final String NUMBER="number";
+    public static final String NAME="name";
+    public static final String GRADE="grade";
+    public static final String SCORE="score";
+    public static final String TIME="time";
+    public static final String PLACE ="place";
+    public static final String REMARK="remark";
+    public static final String DESCRITION="descrition";
+    public static final String UPDATEBY="updateBy";
+    public static final String UPDATEDATE="updateDate";
+    public static final String CREATEBY="createBy";
+    public static final String CREATEDATE="createDate";
+
     private static final long serialVersionUID = 4914051393292204381L;
     private long id;
     private String type;// 出操/内务/考勤 :drill, housekeeping, attendance, 
@@ -24,7 +40,8 @@ public class ConductScore{
     private int score;// 分数   
     private Date time;//日期时间
     private String place;//地点
-    private String remark;// 备注 
+    private String remark;// 备注
+    private UserBean user; //学生
     
     /** 
      * type
@@ -108,5 +125,12 @@ public class ConductScore{
     public void setRemark(String remark) {
         this.remark = remark;
     }
-    
+
+    public UserBean getUser() {
+        return user;
+    }
+
+    public void setUser(UserBean user) {
+        this.user = user;
+    }
 }
