@@ -3,6 +3,8 @@
  */
 package com.tonysys.admin.model;
 
+import java.util.Date;
+
 /**
  * 
  * 科技系： 学年   学期  年级  院(系)/部  专业  班级  学制  学号  姓名  性别  出生日期    身份证号    考生号 籍贯  培养层次        更正  签名
@@ -20,6 +22,7 @@ public class UserBean {
     public static final String TYPE="type";
     public static final String NUMBER="number";
     public static final String PASSWORD="password";
+    public static final String NAME="name";
     public static final String DEPT="dept";
     public static final String TRAININGLEVEL="trainingLevel";
     public static final String SUBJECT="subject";
@@ -77,7 +80,13 @@ public class UserBean {
     private String fatherName;// 父亲姓名  
     private String fatherPhone;// 联系电话  
     private String motherName;// 母亲姓名  
-    private String motherPhone;// 联系电话  
+    private String motherPhone;// 联系电话
+
+    private String updateBy;
+    private Date updateDate;
+    private String createBy;
+    private Date createDate;
+
     private Dormitory dormitory;//学生所在宿舍
     @Override
     public boolean equals(Object obj) {
@@ -283,4 +292,43 @@ public class UserBean {
         this.motherPhone = motherPhone;
     }
 
+    public String getUpdateBy() {
+        return updateBy;
+    }
+
+    public void setUpdateBy(String updateBy) {
+        this.updateBy = updateBy;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public String getCreateBy() {
+        return createBy;
+    }
+
+    public void setCreateBy(String createBy) {
+        this.createBy = createBy;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Dormitory getDormitory() {
+        return dormitory;
+    }
+
+    public void setDormitory(Dormitory dormitory) {
+        this.dormitory = dormitory;
+    }
 }

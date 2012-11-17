@@ -23,6 +23,20 @@ public class UserDAOImpl implements UserDAO {
     JdbcTemplate tonysysJdbcTemplate;
     @Resource
     CacheManager ehCacheManager;
+
+    @Override
+    public UserBean getUserByID(Integer id) {
+        if(id==null){
+            return null;
+        }
+        return null;
+    }
+
+    @Override
+    public UserBean getUserByNumber(String number) {
+        return null;  
+    }
+
     @Override
     public int update(UserBean userBean) {
         return 0;  

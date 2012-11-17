@@ -15,7 +15,7 @@ public class ConductScore{
     /**
      * 
      */
-    public static final String tablename="conduct_score";
+    public static final String TABLENAME="conduct_score";
     public static final String ID="id";
     public static final String TYPE="type";
     public static final String NUMBER="number";
@@ -25,7 +25,7 @@ public class ConductScore{
     public static final String TIME="time";
     public static final String PLACE ="place";
     public static final String REMARK="remark";
-    public static final String DESCRITION="descrition";
+    public static final String DESCRIPTION="description";
     public static final String UPDATEBY="updateBy";
     public static final String UPDATEDATE="updateDate";
     public static final String CREATEBY="createBy";
@@ -41,6 +41,11 @@ public class ConductScore{
     private Date time;//日期时间
     private String place;//地点
     private String remark;// 备注
+    private String description; //操行分描述
+    private String updateBy;   //最近一次更新人
+    private Date updateDate;   //更新日期
+    private String createBy;   //创建者
+    private Date createDate;   //创建日期
     private UserBean user; //学生
     
     /** 
@@ -124,6 +129,46 @@ public class ConductScore{
     }
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getUpdateBy() {
+        return updateBy;
+    }
+
+    public void setUpdateBy(String updateBy) {
+        this.updateBy = updateBy;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public String getCreateBy() {
+        return createBy;
+    }
+
+    public void setCreateBy(String createBy) {
+        this.createBy = createBy;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 
     public UserBean getUser() {

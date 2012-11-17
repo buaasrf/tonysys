@@ -1,5 +1,7 @@
 package com.tonysys.admin.model;
 
+import java.util.List;
+
 /**
  * 宿舍信息实体类
  * Created with IntelliJ IDEA.
@@ -22,6 +24,7 @@ public class Dormitory {
     private String room;
     private String door;
     private Integer bednumber;
+    private List<UserBean> userList;
 
     @Override
     public String toString() {
@@ -83,6 +86,14 @@ public class Dormitory {
 
     public void setBednumber(Integer bednumber) {
         this.bednumber = bednumber;
+    }
+
+    public List<UserBean> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<UserBean> userList) {
+        this.userList = userList;
     }
 
     @Override

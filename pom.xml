@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>tonsys</groupId>
-    <artifactId>tonsys</artifactId>
+    <groupId>tonysys</groupId>
+    <artifactId>tonysys</artifactId>
     <version>1.0</version>
     <packaging>pom</packaging>
     <name>${project.artifactId}</name>
@@ -42,7 +42,7 @@
     <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-orm</artifactId>
-        <version>3.1.1.RELEASE</version>
+        <version>${springframework.version}</version>
     </dependency>
     <dependency>
         <groupId>org.slf4j</groupId>

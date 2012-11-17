@@ -14,6 +14,8 @@ import java.util.List;
  */
 
 public interface UserDAO {
+    UserBean getUserByID(Integer id);
+    UserBean getUserByNumber(String number);
     int update(UserBean userBean);
     PageIterator<UserBean> pageSearch(UserBean userBean,int page,int pageSize,String order);
     List<UserBean> search(UserBean userBean,int page,int pageSize,String order,boolean isall);
