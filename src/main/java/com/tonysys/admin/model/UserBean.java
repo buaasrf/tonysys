@@ -45,7 +45,7 @@ public class UserBean {
     private String fatherPhone;// 联系电话  
     private String motherName;// 母亲姓名  
     private String motherPhone;// 联系电话  
-    
+    private Dormitory dormitory;//学生所在宿舍
     @Override
     public boolean equals(Object obj) {
         if (null == obj) {
