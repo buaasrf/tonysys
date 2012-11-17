@@ -52,7 +52,7 @@
     <!--  配置事务传播特性 -->
     <tx:advice id="tonysysAdvice" transaction-manager="transactionManager">
         <tx:attributes>
-            <tx:method name="save*" propagation="REQUIRED"/>
+            <tx:method name="insert*" propagation="REQUIRED"/>
             <tx:method name="del*" propagation="REQUIRED"/>
             <tx:method name="update*" propagation="REQUIRED"/>
             <tx:method name="add*" propagation="REQUIRED"/>
