@@ -37,6 +37,6 @@
 
     <servlet-mapping>
         <servlet-name>tonysys</servlet-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/admin/*</url-pattern>
     </servlet-mapping>
 </web-app>
