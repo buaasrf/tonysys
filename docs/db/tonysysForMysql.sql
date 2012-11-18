@@ -3,7 +3,7 @@
 -- Server version:               5.5.25 - MySQL Community Server (GPL)
 -- Server OS:                    Win64
 -- HeidiSQL version:             7.0.0.4053
--- Date/time:                    2012-11-17 12:42:40
+-- Date/time:                    2012-11-18 12:40:02
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `conduct_score` (
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '日期时间',
   `place` varchar(32) DEFAULT NULL COMMENT '地点',
   `remark` varchar(32) DEFAULT NULL COMMENT '备注',
-  `descrition` varchar(64) DEFAULT NULL COMMENT '描述',
+  `description` varchar(64) DEFAULT NULL COMMENT '描述',
   `updateBy` varchar(16) DEFAULT NULL,
   `updateDate` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `createBy` varchar(16) DEFAULT NULL,
@@ -94,6 +94,22 @@ CREATE TABLE IF NOT EXISTS `user` (
   KEY `FK_user_dormitory` (`dormitoryid`),
   CONSTRAINT `FK_user_dormitory` FOREIGN KEY (`dormitoryid`) REFERENCES `dormitory` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户对象';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table tonysys.user_dormitory
+DROP TABLE IF EXISTS `user_dormitory`;
+CREATE TABLE IF NOT EXISTS `user_dormitory` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `dormitoryid` int(11) NOT NULL DEFAULT '0',
+  `userid` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `FK__dormitory` (`dormitoryid`),
+  KEY `FK__user` (`userid`),
+  CONSTRAINT `FK__dormitory` FOREIGN KEY (`dormitoryid`) REFERENCES `dormitory` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK__user` FOREIGN KEY (`userid`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='学生宿舍关系表';
 
 -- Data exporting was unselected.
 /*!40014 SET FOREIGN_KEY_CHECKS=1 */;
