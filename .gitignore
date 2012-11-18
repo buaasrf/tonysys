@@ -1,3 +1,5 @@
 #idea ignore files
 *.iml
 .idea/
+target/
+*.log
