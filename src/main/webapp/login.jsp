@@ -56,7 +56,7 @@
 
 <div class="container">
 
-    <form class="form-signin">
+    <form class="form-signin" action="#">
         <h2 class="form-signin-heading">学生宿舍管理系统</h2>
         <input type="text" id="userName"  class="input-block-level" placeholder="用户名">
         <input type="password" id="password"  class="input-block-level" placeholder="密码">
