@@ -103,10 +103,8 @@ public class Dormitory {
 
         Dormitory dormitory = (Dormitory) o;
 
-        if (bednumber != null ? !bednumber.equals(dormitory.bednumber) : dormitory.bednumber != null) return false;
         if (building != null ? !building.equals(dormitory.building) : dormitory.building != null) return false;
         if (door != null ? !door.equals(dormitory.door) : dormitory.door != null) return false;
-        if (id != null ? !id.equals(dormitory.id) : dormitory.id != null) return false;
         if (room != null ? !room.equals(dormitory.room) : dormitory.room != null) return false;
 
         return true;

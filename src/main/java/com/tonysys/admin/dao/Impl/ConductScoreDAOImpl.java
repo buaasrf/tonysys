@@ -31,6 +31,7 @@ public class ConductScoreDAOImpl implements ConductScoreDAO{
         if(conductSorce==null ){
             return 0;
         }
+
         int result=0;
         try{
             log.info("开始插入conductScore:"+conductSorce.toString());

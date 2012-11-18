@@ -10,7 +10,6 @@
     <packaging>war</packaging>
 
     <name>${project.artifactId}</name>
-
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
         <outputDirectory>target/classes</outputDirectory>
@@ -27,7 +26,6 @@
                 </excludes>
             </resource>
         </resources>
-
         <plugins>
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>
