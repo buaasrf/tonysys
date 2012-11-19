@@ -44,8 +44,8 @@
                 </p>
                 <ul class="nav">
                     <li class="active"><a href="/index.jsp">首页</a></li>
-                    <li><a href="/about.html" name="/about.html">关于</a></li>
-                    <li><a href="/contactUs.html" name="/contactUs.html">联系我们</a></li>
+                    <li><a href="/about.html">关于</a></li>
+                    <li><a href="/contactUs.html">联系我们</a></li>
                 </ul>
             </div><!--/.nav-collapse -->
         </div>
