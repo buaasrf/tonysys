@@ -11,9 +11,9 @@
 /*!40014 SET FOREIGN_KEY_CHECKS=0 */;
 
 -- Dumping database structure for tonysys
-DROP DATABASE IF EXISTS `tonysys`;
-CREATE DATABASE IF NOT EXISTS `tonysys` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci */;
-USE `tonysys`;
+DROP DATABASE IF EXISTS `DB_TONYSYS`;
+CREATE DATABASE IF NOT EXISTS `DB_TONYSYS` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci */;
+USE `DB_TONYSYS`;
 
 
 -- Dumping structure for table tonysys.conduct_score
