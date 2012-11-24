@@ -1,12 +1,16 @@
 package com.tonysys.admin.controller;
 
+import com.tonysys.admin.model.UserBean;
+import com.tonysys.admin.service.UserService;
 import com.tonysys.context.UserContext;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,31 +25,33 @@ import java.util.Map;
 @Controller
 @RequestMapping("/login")
 public class LoginController {
-    @RequestMapping(value = "/{userName}/{password}")
-    public ModelAndView userLogin(HttpServletRequest request,@PathVariable String userName,@PathVariable String password){
+    @Resource
+    UserService userService;
+    @RequestMapping(value = "/")
+    public String userLogin(HttpServletRequest request,String number,String password,Model model){
         String error="";
         int flag=1;
-        ModelAndView modelAndView = new ModelAndView();
 
-        if(StringUtils.isBlank(userName)){
+        if(StringUtils.isBlank(number)){
             flag=0;
-            error="用户名为空";
+            error="学号为空";
         }
-        if(StringUtils.isBlank(password)){
+        else if(StringUtils.isBlank(password)){
             flag=0;
             error="密码为空";
         }
-        Map<String,Object> resultMap = new HashMap<String, Object>();
-        resultMap.put("flag",flag);
-        resultMap.put("error",error);
-        if(flag==0){
-            resultMap.put("redirect","/login.jsp");
-        }
         else {
-            resultMap.put("redirect","/index.jsp");
+            UserBean userBean =userService.getUserByNumber(number);
+            if(!userBean.getPassword().equals(password)){
+                flag=0;
+                error = "用户密码不正确";
+            }
         }
-        modelAndView.addAllObjects(resultMap);
-        request.getSession().setAttribute(UserContext.USER_NAME,userName);
-        return modelAndView;
+        model.addAttribute("error", error);
+        model.addAttribute("number", number);
+        if(flag==0){
+            return "/login";
+        }
+        return "redirect:/index.jsp";
     }
 }

@@ -1,9 +1,14 @@
 package com.tonysys.admin.dao.Impl;
 
+import com.tonysys.admin.dao.DormitoryDAO;
 import com.tonysys.admin.dao.UserDAO;
 import com.tonysys.admin.model.UserBean;
+import com.tonysys.admin.rowMapper.UserBeanRowMapper;
 import com.tonysys.util.PageIterator;
 import net.sf.ehcache.CacheManager;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -19,22 +24,46 @@ import java.util.List;
  */
 @Repository("userDAO")
 public class UserDAOImpl implements UserDAO {
+    private  static final Logger log = LoggerFactory.getLogger(UserDAOImpl.class);
+    @Resource
+    DormitoryDAO dormitoryDAO;
     @Resource
     JdbcTemplate tonysysJdbcTemplate;
     @Resource
     CacheManager ehCacheManager;
-
+    @Resource
+    UserBeanRowMapper userBeanRowMapper;
     @Override
     public UserBean getUserByID(Integer id) {
+        log.info("根据学生id{},获取用户信息",id);
         if(id==null){
             return null;
         }
-        return null;
+        UserBean userBean = null;
+        try{
+            userBean = tonysysJdbcTemplate.queryForObject("select * from "+UserBean.TABLENAME+" where "+UserBean.ID+"=?",new Object[]{id},userBeanRowMapper);
+        }
+        catch (Exception e){
+             log.error(e.getMessage());
+        }
+        return userBean;
     }
 
     @Override
     public UserBean getUserByNumber(String number) {
-        return null;  
+        log.info("根据学生number{},获取用户信息",number);
+        if(StringUtils.isBlank(number)){
+            return null;
+        }
+        UserBean userBean = null;
+        try{
+            userBean = tonysysJdbcTemplate.queryForObject("select * from "+UserBean.TABLENAME+" where "+UserBean.NUMBER+"=?",new Object[]{number},userBeanRowMapper);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+        return userBean;
     }
 
     @Override

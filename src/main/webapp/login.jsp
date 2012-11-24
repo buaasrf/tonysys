@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -9,7 +10,7 @@
     <meta name="author" content="">
 
     <!-- Le styles -->
-    <link href="resource/css/bootstrap.css" rel="stylesheet">
+    <link href="/resource/css/bootstrap.css" rel="stylesheet">
     <style type="text/css">
         body {
             padding-top: 40px;
@@ -43,11 +44,11 @@
         }
 
     </style>
-    <link href="resource/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="/resource/css/bootstrap-responsive.css" rel="stylesheet">
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
-    <script src="resource/js/html5.js"></script>
+    <script src="/resource/js/html5.js"></script>
     <![endif]-->
 
 </head>
@@ -56,14 +57,18 @@
 
 <div class="container">
 
-    <form class="form-signin" action="#">
+    <form class="form-signin" action="/admin/login/" method="post">
         <h2 class="form-signin-heading">学生宿舍管理系统</h2>
-        <input type="text" id="userName"  class="input-block-level" placeholder="用户名">
-        <input type="password" id="password"  class="input-block-level" placeholder="密码">
+        <input type="text" name="number"  class="input-block-level" placeholder="学号" value="${number}">
+        <c:if test="${error!=null}">
+            <div class="alert-error">${error}</div>
+        </c:if>
+        <input type="password" name="password"  class="input-block-level" placeholder="密码">
         <label class="checkbox">
             <input type="checkbox" value="remember-me"> 记住我
         </label>
-        <button class="btn btn-large btn-primary" type="button" onclick="login()">登录</button>
+        <button class="btn btn-large btn-primary" type="button" onclick="submit()">登录</button>
+
     </form>
 
 </div> <!-- /container -->
@@ -71,30 +76,7 @@
 <!-- Le javascript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-<script src="resource/js/jquery-1.8.2.min.js"></script>
-<script src="resource/js/bootstrap.min.js"></script>
- <script type="text/javascript">
-     function login(){
-         $.ajax({
-             url:"/admin/login/"+$("#userName").val()+"/"+$("#password").val(),
-             success:function(data){
-                 if(data["responseText"]["flag"]==0){
-                    alert(data["responseText"]["error"]);
-                 }
-                 if(data["flag"]==1){
-                     top.window.location.href=data["responseText"]["redirect"];
-                 }
-             },
-             error:function(data){
-                 if(data["responseText"]["flag"]==0){
-                     alert(data["responseText"]["error"]);
-                 }
-                 if(data["responseText"]["flag"]==1){
-                     top.window.location.href=data["responseText"]["redirect"];
-                 }
-             }
-         });
-     }
- </script>
+<script src="/resource/js/jquery-1.8.2.min.js"></script>
+<script src="/resource/js/bootstrap.min.js"></script>
 </body>
 </html>

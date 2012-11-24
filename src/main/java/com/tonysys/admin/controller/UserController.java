@@ -1,8 +1,14 @@
 package com.tonysys.admin.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.tonysys.admin.service.UserService;
+import com.tonysys.util.FastJsonHelper;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import javax.xml.ws.RequestWrapper;
 
 /**
@@ -15,4 +21,11 @@ import javax.xml.ws.RequestWrapper;
 @Controller
 @RequestMapping("/user")
 public class UserController {
+    @Resource
+    UserService userService;
+    @RequestMapping(value = "/get/{number}")
+    @ResponseBody
+    public String getUserByNumber(@PathVariable String number){
+        return JSON.toJSONString(userService.getUserByNumber(number), FastJsonHelper.features);
+    }
 }

@@ -187,10 +187,16 @@
             <artifactId>httpclient</artifactId>
             <version>4.2.1</version>
         </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+        </dependency>
+
     </dependencies>
 
     <properties>
-        <springframework.version>3.1.1.RELEASE</springframework.version>
+        <springframework.version>3.0.5.RELEASE</springframework.version>
         <project.environment>dev</project.environment>
     </properties>
 </project>

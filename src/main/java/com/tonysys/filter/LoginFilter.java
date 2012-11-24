@@ -35,7 +35,7 @@ public class LoginFilter implements Filter {
         notLoginURL=filterConfig.getInitParameter("notLoginURL");
         if(notLoginURL==null)
         {
-            notLoginURL="/notLogin.jsp";
+            notLoginURL="/login.jsp";
         }
         if(log.isDebugEnabled())
         {

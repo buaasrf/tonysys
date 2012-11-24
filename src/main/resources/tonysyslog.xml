@@ -10,7 +10,7 @@
         </layout>
     </appender>
 
-    <logger name="tonysys" level="info">
+    <logger name="tonysys" class="com.tonysys.admin.*.*" level="debug">
         <appender-ref ref="tonysys_appender" />
     </logger>
 

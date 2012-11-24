@@ -17,7 +17,7 @@
         <property name="location" value="classpath:config.properties"/>
     </bean>
 
-    <context:component-scan base-package="com.tonysys.admin.dao,com.tonysys.admin.controller,com.tonysys.admin.service"/>
+    <context:component-scan base-package="com.tonysys.admin.dao,com.tonysys.admin.controller,com.tonysys.admin.service,com.tonysys.admin.rowMapper"/>
 
     <bean id="tonysysDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
         <property name="driverClass" value="${tonysys.driver}"/>
