@@ -96,21 +96,5 @@ CREATE TABLE IF NOT EXISTS `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户对象';
 
 -- Data exporting was unselected.
-
-
--- Dumping structure for table tonysys.user_dormitory
-DROP TABLE IF EXISTS `user_dormitory`;
-CREATE TABLE IF NOT EXISTS `user_dormitory` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `dormitoryid` int(11) NOT NULL DEFAULT '0',
-  `userid` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `FK__dormitory` (`dormitoryid`),
-  KEY `FK__user` (`userid`),
-  CONSTRAINT `FK__dormitory` FOREIGN KEY (`dormitoryid`) REFERENCES `dormitory` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK__user` FOREIGN KEY (`userid`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='学生宿舍关系表';
-
--- Data exporting was unselected.
 /*!40014 SET FOREIGN_KEY_CHECKS=1 */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
