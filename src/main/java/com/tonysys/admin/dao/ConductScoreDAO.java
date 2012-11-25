@@ -13,6 +13,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public interface ConductScoreDAO {
+    ConductScore getByID(Integer id);
     int insert(ConductScore conductSorce);
     int update(ConductScore conductScore);
     int deleteByID(Integer id);

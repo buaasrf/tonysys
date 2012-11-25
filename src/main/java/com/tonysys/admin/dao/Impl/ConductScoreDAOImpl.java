@@ -28,6 +28,23 @@ public class ConductScoreDAOImpl implements ConductScoreDAO{
     JdbcTemplate tonysysJdbcTemplate;
     @Resource
     CacheManager ehCacheManager;
+
+    @Override
+    public ConductScore getByID(Integer id) {
+        if(id==null){
+            return  null;
+        }
+        ConductScore conductScore=null;
+        try{
+            conductScore = tonysysJdbcTemplate.queryForObject("select * from "+ConductScore.TABLENAME+" where id=?",new Object[]{id},new ConductScoreRowMapper());
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+        return conductScore;
+    }
+
     @Override
     public int insert(ConductScore conductSorce) {
         if(conductSorce==null ){
@@ -162,7 +179,7 @@ public class ConductScoreDAOImpl implements ConductScoreDAO{
         int count = count(whereStr);
         PageIterator<ConductScore> pageIterator = PageIterator.createInstance(page,pageSize,count);
         try{
-            List<ConductScore> conductScoreList = tonysysJdbcTemplate.query("select * from "+ConductScore.TABLENAME+" where "+whereStr+" limit "+((page-1)*pageSize)+","+pageSize+getOrderStr(order),new ConductScoreRowMapper());
+            List<ConductScore> conductScoreList = tonysysJdbcTemplate.query("select * from " + ConductScore.TABLENAME + " where " + whereStr + " limit " + ((page - 1) * pageSize) + "," + pageSize + getOrderStr(order), new ConductScoreRowMapper());
             pageIterator.setData(conductScoreList);
         }
         catch (Exception e){
