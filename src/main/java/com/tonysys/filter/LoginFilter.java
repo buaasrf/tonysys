@@ -91,11 +91,7 @@ public class LoginFilter implements Filter {
     private boolean checkLogin(ServletRequest request,ServletResponse response)
     {
         HttpServletRequest req = (HttpServletRequest) request;
-        if(CookieUtil.getCookie(req, UserContext.USER_TOKEN)==null)
-        {
-            return false;
-        }
-        return true;
+        return req.getSession().getAttribute(UserContext.USER_ID)!=null;
     }
     @Override
     public void destroy() {

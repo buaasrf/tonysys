@@ -18,6 +18,10 @@ public final class UserContext {
      */
     public static final String USER_ID="user_id";
     /**
+     * 用户唯一编号
+     */
+    public static final String USER_NUMBER="user_number";
+    /**
      * 用户名
      */
     public static final String USER_NAME="user_name";
@@ -25,6 +29,10 @@ public final class UserContext {
      * 用户email
      */
     public static final String USER_EMAIL="user_email";
+    /**
+     * 用户权限级别
+     */
+    public static final String USER_PRIVILEGE="user_privilege";
     /**
      * 用户登录时间
      */
