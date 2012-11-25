@@ -18,12 +18,14 @@ public class Dormitory {
     public static final String ROOM="room";
     public static final String DOOR="door";
     public static final String BEDNUMBER="bednumber";
+    public static final String TEL="tel";
     /*************************************************/
     private Integer id;
     private String building;
     private String room;
     private String door;
     private Integer bednumber;
+    private String tel;
     private List<UserBean> userList;
 
     @Override
@@ -40,12 +42,13 @@ public class Dormitory {
     public Dormitory() {
     }
 
-    public Dormitory(Integer id, String building, String room, String door, Integer bednumber) {
+    public Dormitory(Integer id, String building, String room, String door, Integer bednumber ,String tel) {
         this.id = id;
         this.building = building;
         this.room = room;
         this.door = door;
         this.bednumber = bednumber;
+        this.tel=tel;
     }
 
     public Integer getId() {
@@ -86,6 +89,14 @@ public class Dormitory {
 
     public void setBednumber(Integer bednumber) {
         this.bednumber = bednumber;
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
     }
 
     public List<UserBean> getUserList() {

@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ page import="com.tonysys.context.UserType" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -64,6 +65,16 @@
             <div class="alert-error">${error}</div>
         </c:if>
         <input type="password" name="password"  class="input-block-level" placeholder="密码">
+        <select name="userType" class="input-block-level">
+            <%
+                for (UserType userType :UserType.getAllUserType())
+                {
+            %>
+                <option value="<%= userType.getKey()%>"><%= userType.getValue()%></option>
+            <%
+                }
+            %>
+        </select>
         <label class="checkbox">
             <input type="checkbox" value="remember-me"> 记住我
         </label>

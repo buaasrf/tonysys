@@ -29,6 +29,7 @@ public class DormitoryRowMapper implements RowMapper<Dormitory> {
         dormitory.setRoom(resultSet.getString(Dormitory.ROOM));
         dormitory.setDoor(resultSet.getString(Dormitory.DOOR));
         dormitory.setBednumber(resultSet.getInt(Dormitory.BEDNUMBER));
+        dormitory.setTel(resultSet.getString(Dormitory.TEL));
 //        dormitory.setUserList(dormitoryDAO.getUserByDormitoryID(dormitory.getId()));
         return dormitory;
     }
