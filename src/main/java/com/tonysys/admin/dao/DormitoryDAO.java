@@ -18,6 +18,7 @@ public interface DormitoryDAO {
     List<UserBean> getUserByDormitoryID(Integer id);
     int insert(Dormitory dormitory );
     int update(Dormitory dormitory);
+    int count(String whereStr);
     List<Dormitory> search(Dormitory dormitory,int page,int pageSize,String order,boolean isall);
     PageIterator<Dormitory> pageSearch(Dormitory dormitory,int page,int pageSize,String order);
     int deleteByID(Integer id);

@@ -7,6 +7,7 @@ import com.tonysys.admin.rowMapper.DormitoryRowMapper;
 import com.tonysys.admin.rowMapper.UserBeanRowMapper;
 import com.tonysys.util.PageIterator;
 import net.sf.ehcache.CacheManager;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -43,6 +44,7 @@ public class DormitoryDAOImpl implements DormitoryDAO {
             log.info("获取的宿舍信息为：{}", dormitory.toString());
         }
         catch (Exception e){
+            e.printStackTrace();
             log.error(e.getMessage());
         }
         return dormitory;
@@ -50,14 +52,17 @@ public class DormitoryDAOImpl implements DormitoryDAO {
 
     @Override
     public List<UserBean> getUserByDormitoryID(Integer id) {
+        log.info("begin search UserBean list by dormitory id:{}",id);
         if(id==null){
             return null;
         }
         List<UserBean> userList =null;
         try{
             userList =tonysysJdbcTemplate.query("select "+UserBean.TABLENAME+".* from "+UserBean.TABLENAME+" inner join user_dormitory on "+UserBean.TABLENAME+".id=user_dormitory.userid where user_dormitory.dormitoryid=?",new Object[]{id},new UserBeanRowMapper());
+            log.info("search userBean list size:{}",userList.size());
         }
         catch (Exception e){
+            e.printStackTrace();
             log.error(e.getMessage());
         }
         return userList;
@@ -65,31 +70,168 @@ public class DormitoryDAOImpl implements DormitoryDAO {
 
     @Override
     public int insert(Dormitory dormitory) {
-        return 0;  
+        log.info("user begin to insert into dormitory：{}",dormitory.toString());
+        if(dormitory==null){
+            log.info("dormitory is null");
+            return 0;
+        }
+        int result=0;
+        try{
+            StringBuffer insertStr= new StringBuffer("(");
+            insertStr.append(Dormitory.BUILDING).append(",").append(Dormitory.ROOM).append(",").append(Dormitory.DOOR)
+                    .append(",").append(Dormitory.BEDNUMBER).append(",").append(Dormitory.TEL).append(")");
+            result=tonysysJdbcTemplate.update("insert into "+Dormitory.TABLENAME+insertStr.toString()+" values" +
+                    "(?,?,?,?,?)",new Object[]{dormitory.getBuilding(),dormitory.getRoom(),dormitory.getDoor(),dormitory.getBednumber(),dormitory.getTel()});
+            log.info("insert database dormitory {}",result==0?"failed":"success");
+        }
+        catch (Exception e){
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
     }
 
     @Override
     public int update(Dormitory dormitory) {
-        return 0;  
+        log.info("begin to update dormitory:{}",dormitory);
+        if(dormitory==null||dormitory.getId()==null){
+            log.info("dormitory is null");
+            return 0;
+        }
+        int result=0;
+        try{
+            StringBuffer updateStr = new StringBuffer();
+            updateStr.append(" set ").append(Dormitory.BUILDING).append("=?,")
+                    .append(Dormitory.ROOM).append("=?,")
+                    .append(Dormitory.DOOR).append("=?,")
+                    .append(Dormitory.BEDNUMBER).append("=?,")
+                    .append(Dormitory.TEL).append("=? where ").append(Dormitory.ID).append("=?");
+            result = tonysysJdbcTemplate.update("update "+Dormitory.TABLENAME+updateStr.toString()
+                    ,new Object[]{dormitory.getBuilding(),dormitory.getRoom(),dormitory.getDoor(),dormitory.getBednumber(),dormitory.getTel(),dormitory.getId()});
+            log.info("update database dormitory {}",result==0?"failed":"success");
+        }
+        catch (Exception e){
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @Override
+    public int count(String whereStr) {
+        log.info("begin to count dormitory by condition:{}",whereStr);
+        if(StringUtils.isBlank(whereStr)){
+            return 0;
+        }
+        int result=0;
+        try{
+            result=tonysysJdbcTemplate.queryForInt("select count(1) from "+Dormitory.TABLENAME+" where "+whereStr);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+        return result;
     }
 
     @Override
     public List<Dormitory> search(Dormitory dormitory, int page, int pageSize, String order, boolean isall) {
-        return null;  
+        if(page<1){
+            page =1;
+        }
+        if(pageSize<0||pageSize==Integer.MAX_VALUE){
+            pageSize=300;
+        }
+        String pageStr = "";
+        if(!isall){
+            pageStr=" limit "+((page-1)*pageSize)+","+pageSize+" ";
+        }
+        List<Dormitory> dormitoryList = null;
+        try{
+            dormitoryList = tonysysJdbcTemplate.query("select from "+Dormitory.TABLENAME+" where "+createWhereStr(dormitory)+pageStr+getOrderStr(order),new DormitoryRowMapper());
+        }
+        catch (Exception e){
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+        return dormitoryList;
     }
 
     @Override
     public PageIterator<Dormitory> pageSearch(Dormitory dormitory, int page, int pageSize, String order) {
-        return null;  
+        if(page<1){
+            page =1;
+        }
+        if(pageSize<0||pageSize==Integer.MAX_VALUE){
+            pageSize=300;
+        }
+        String whereStr = createWhereStr(dormitory);
+        String orderBy = getOrderStr(order);
+        log.info("begin page search from database page:{} pageSize:{} where:{} order:{}",page,pageSize,whereStr,order);
+        int count =count(whereStr);
+        PageIterator<Dormitory> pageIterator =  PageIterator.createInstance(page,pageSize,count);
+        try{
+            List<Dormitory> dormitoryList =tonysysJdbcTemplate.query("select from "+Dormitory.TABLENAME+" where "+whereStr+" limit "+((page-1)*pageSize)+","+pageSize+ orderBy,new DormitoryRowMapper());
+            pageIterator.setData(dormitoryList);
+            log.info("page search dormitory from database rows:{}",dormitoryList.size());
+        }
+        catch (Exception e){
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+        return pageIterator;
     }
-
+    private String getOrderStr(String order){
+        return StringUtils.isBlank(order)?"":(" order by "+order);
+    }
+    private  String createWhereStr(Dormitory dormitory){
+        StringBuffer whereStr = new StringBuffer(" 1=1 ");
+        if(dormitory!=null){
+            if(StringUtils.isNotBlank(dormitory.getBuilding())){
+                whereStr.append(" and ").append(Dormitory.BUILDING).append("='").append(dormitory.getBuilding().trim()).append("'");
+            }
+            if(StringUtils.isNotBlank(dormitory.getRoom())){
+                whereStr.append(" and ").append(Dormitory.ROOM).append("='").append(dormitory.getRoom().trim()).append("'");
+            }
+            if(StringUtils.isNotBlank(dormitory.getDoor())){
+                whereStr.append(" and ").append(Dormitory.DOOR).append("='").append(dormitory.getDoor().trim()).append("'");
+            }
+            if(dormitory.getBednumber()!=null){
+                whereStr.append(" and ").append(Dormitory.BEDNUMBER).append("=").append(dormitory.getBednumber());
+            }
+            if(StringUtils.isNotBlank(dormitory.getTel())){
+                whereStr.append(" and ").append(Dormitory.TEL).append(" like'%").append(dormitory.getTel().trim()).append("%'");
+            }
+        }
+        return whereStr.toString();
+    }
     @Override
     public int deleteByID(Integer id) {
-        return 0;  
+        log.info("begin to delete dormitory by id:{}",id);
+        if(id==null){
+            return 0;
+        }
+        int result=0;
+        try{
+            result=tonysysJdbcTemplate.update("delete from "+Dormitory.TABLENAME+" where id=?",new Object[]{id});
+            log.info("delete database dormitory {}",result==0?"failed":"success");
+        }
+        catch (Exception e){
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
     }
 
     @Override
     public int deleteByIDs(List<Integer> IDs) {
-        return 0;  
+        if(IDs==null){
+            return 0;
+        }
+        int result=0;
+        for(Integer id:IDs){
+            result+=deleteByID(id);
+        }
+        return result;
     }
 }

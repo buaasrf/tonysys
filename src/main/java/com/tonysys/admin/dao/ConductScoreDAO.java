@@ -17,6 +17,7 @@ public interface ConductScoreDAO {
     int update(ConductScore conductScore);
     int deleteByID(Integer id);
     int deleteByIDs(List<Integer>IDs);
+    int count(String whereStr);
     List<ConductScore> search(ConductScore conductScore,int page,int pageSize,String order,boolean isall);
     PageIterator<ConductScore> pageSearch(ConductScore conductScore,int page,int pageSize,String order);
 }

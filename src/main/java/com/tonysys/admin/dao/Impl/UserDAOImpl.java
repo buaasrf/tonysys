@@ -72,6 +72,22 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
+    public int count(String whereStr) {
+        if(StringUtils.isBlank(whereStr)){
+            return 0;
+        }
+        int result=0;
+        try{
+            result=tonysysJdbcTemplate.queryForInt("select count(1) from "+UserBean.TABLENAME+" where "+whereStr);
+        }
+        catch (Exception e){
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @Override
     public PageIterator<UserBean> pageSearch(UserBean userBean, int page, int pageSize, String order) {
         return null;  
     }

@@ -3,6 +3,7 @@ package com.tonysys.admin.rowMapper;
 import com.tonysys.admin.dao.DormitoryDAO;
 import com.tonysys.admin.model.Dormitory;
 import com.tonysys.admin.model.UserBean;
+import com.tonysys.context.UserType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
@@ -19,7 +20,7 @@ import java.sql.SQLException;
  * Time: 下午2:56
  * To change this template use File | Settings | File Templates.
  */
-@Repository
+@Repository("userBeanRowMapper")
 public class UserBeanRowMapper implements RowMapper<UserBean> {
     private  static  final Logger log = LoggerFactory.getLogger(UserBeanRowMapper.class);
     @Resource
@@ -76,6 +77,7 @@ public class UserBeanRowMapper implements RowMapper<UserBean> {
                 Dormitory dormitory = dormitoryDAO.getDormitoryByID(dormitoryID);
                 userBean.setDormitory(dormitory);
             }
+            userBean.setUserType(UserType.getUserType(userBean.getType()));
         }
         catch (Exception e)
         {

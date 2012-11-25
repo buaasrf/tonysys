@@ -17,7 +17,7 @@ import java.sql.SQLException;
  * Time: 下午2:31
  * To change this template use File | Settings | File Templates.
  */
-@Repository
+@Repository("dormitoryRowMapper")
 public class DormitoryRowMapper implements RowMapper<Dormitory> {
     @Resource
     DormitoryDAO dormitoryDAO;

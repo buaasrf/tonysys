@@ -16,7 +16,7 @@ import java.sql.SQLException;
  * Time: 下午3:08
  * To change this template use File | Settings | File Templates.
  */
-@Repository
+@Repository("conductScoreRowMapper")
 public class ConductScoreRowMapper implements RowMapper<ConductScore> {
     @Resource
     UserDAO userDAO;
