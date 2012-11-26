@@ -20,7 +20,7 @@ import java.net.URLDecoder;
  * 以上两个url都可以是带有正则表达式的地址，同时可以使用/ * * /，/ * /, / * * ,/ * 来匹配路径
  * ）
  * Created with IntelliJ IDEA.
- * User: ruifeng.sun
+ * User: tony
  * Date: 12-10-30
  * Time: 下午3:03
  * To change this template use File | Settings | File Templates.

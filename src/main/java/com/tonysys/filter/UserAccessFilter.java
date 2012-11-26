@@ -24,7 +24,7 @@ import java.util.List;
  * 注：以上路径都可以是带有正则表达式的路径，同时可以使用／**／，／*／，/**,/*来匹配路径
  * ）
  * Created with IntelliJ IDEA.
- * User: ruifeng.sun
+ * User: tony
  * Date: 12-10-30
  * Time: 下午3:05
  * To change this template use File | Settings | File Templates.

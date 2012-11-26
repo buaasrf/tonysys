@@ -4,7 +4,7 @@ import java.util.regex.Pattern;
 
 /**
  * Created with IntelliJ IDEA.
- * User: ruifeng.sun
+ * User: tony
  * Date: 12-11-1
  * Time: 上午10:55
  * To change this template use File | Settings | File Templates.

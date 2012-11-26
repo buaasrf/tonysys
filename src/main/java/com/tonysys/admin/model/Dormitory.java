@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * 宿舍信息实体类
  * Created with IntelliJ IDEA.
- * User: sunruifeng
+ * User: tony
  * Date: 12-11-17
  * Time: 下午12:21
  * To change this template use File | Settings | File Templates.

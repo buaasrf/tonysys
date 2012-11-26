@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * Created with IntelliJ IDEA.
- * User: sunruifeng
+ * User: tony
  * Date: 12-11-25
  * Time: 下午1:47
  * To change this template use File | Settings | File Templates.

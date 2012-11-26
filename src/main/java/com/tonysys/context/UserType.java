@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * 用户权限类型
  * Created with IntelliJ IDEA.
- * User: sunruifeng
+ * User: tony
  * Date: 12-11-25
  * Time: 下午8:02
  * To change this template use File | Settings | File Templates.

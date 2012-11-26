@@ -4,7 +4,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 
 /**
  * Created with IntelliJ IDEA.
- * User: sunruifeng
+ * User: tony
  * Date: 12-11-24
  * Time: 下午5:13
  * To change this template use File | Settings | File Templates.
