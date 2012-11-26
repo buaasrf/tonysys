@@ -148,7 +148,7 @@ public class DormitoryDAOImpl implements DormitoryDAO {
         }
         List<Dormitory> dormitoryList = null;
         try{
-            dormitoryList = tonysysJdbcTemplate.query("select from "+Dormitory.TABLENAME+" where "+createWhereStr(dormitory)+pageStr+getOrderStr(order),new DormitoryRowMapper());
+            dormitoryList = tonysysJdbcTemplate.query("select * from "+Dormitory.TABLENAME+" where "+createWhereStr(dormitory)+pageStr+getOrderStr(order),new DormitoryRowMapper());
         }
         catch (Exception e){
             log.error(e.getMessage());
@@ -171,7 +171,7 @@ public class DormitoryDAOImpl implements DormitoryDAO {
         int count =count(whereStr);
         PageIterator<Dormitory> pageIterator =  PageIterator.createInstance(page,pageSize,count);
         try{
-            List<Dormitory> dormitoryList =tonysysJdbcTemplate.query("select from "+Dormitory.TABLENAME+" where "+whereStr+" limit "+((page-1)*pageSize)+","+pageSize+ orderBy,new DormitoryRowMapper());
+            List<Dormitory> dormitoryList =tonysysJdbcTemplate.query("select * from "+Dormitory.TABLENAME+" where "+whereStr+" limit "+((page-1)*pageSize)+","+pageSize+ orderBy,new DormitoryRowMapper());
             pageIterator.setData(dormitoryList);
             log.info("page search dormitory from database rows:{}",dormitoryList.size());
         }
