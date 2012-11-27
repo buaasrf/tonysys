@@ -7,8 +7,8 @@
     </div>
     <div class="modal-body">
         <div class="row-fluid">
-            <div class="span6">
                 <input type="hidden" name="id" value="${dormitory.id}">
+            <div class="span6">
                 <span class="span6">楼编号：</span>
                 <input class="span6" name="building" value="${dormitory.building}"/>
             </div>
