@@ -48,12 +48,12 @@ public class DormitoryServiceImpl implements DormitoryService {
 
     @Override
     public List<Dormitory> search(Dormitory dormitory, int page, int pageSize, String order, boolean isAll) {
-        return dormitoryDAO.search(dormitory,page,pageSize,order,isAll);
+        return dormitoryDAO.search(dormitory, page, pageSize, order, isAll);
     }
 
     @Override
     public PageIterator<Dormitory> pageSearch(Dormitory dormitory, int page, int pageSize, String order) {
-        return dormitoryDAO.pageSearch(dormitory,page,pageSize,order);
+        return dormitoryDAO.pageSearch(dormitory, page, pageSize, order);
     }
 
     @Override

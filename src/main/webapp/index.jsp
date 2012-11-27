@@ -20,6 +20,7 @@
         }
     </style>
     <link href="/resource/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="/resource/css/docs.css" rel="stylesheet">
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -69,25 +70,30 @@
         </div><!--/span-->
         <div id="mainContener" class="span9">
             <div class="hero-unit">
-                <h1>Hello, world!</h1>
-                <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-                <p><a class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+                <h1>学生宿舍管理系统</h1>
+                <p>学生宿舍管理系统简介…………</p>
+                <p>1：本系统使用j2ee 轻量级 mvc架构搭建</p>
+                <p>2：前端页面和后台程序完全使用ajax的方式进行异步交互的，数据的传输的格式是使用json标准格式</p>
+                <p>3：项目使用maven做为构建，脱离了平台了的依赖性，实现了在任意平台随意部署灵活性</p>
+                <p>4：系统在开发过程使用了Git作为代码的版本管理控制工具，有效且灵活的控制各个版本的代码，可以多人同时协作开发</p>
+                <p>5：后台数据库是使用优秀的开源数据库mysql，轻量，跨平台，易于管理和使用</p>
+                <p><a class="btn btn-primary btn-large">了解更多 &raquo;</a></p>
             </div>
             <div class="row-fluid">
                 <div class="span4">
-                    <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn" href="#">View details &raquo;</a></p>
+                    <h2>j2ee mvc</h2>
+                    <p>j2ee mvc 简介…… </p>
+                    <p><a class="btn" href="#">查看详细 &raquo;</a></p>
                 </div><!--/span-->
                 <div class="span4">
-                    <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn" href="#">View details &raquo;</a></p>
+                    <h2>ajax</h2>
+                    <p>ajax 简介……</p>
+                    <p><a class="btn" href="#">查看详细 &raquo;</a></p>
                 </div><!--/span-->
                 <div class="span4">
-                    <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn" href="#">View details &raquo;</a></p>
+                    <h2>maven</h2>
+                    <p>maven简介……</p>
+                    <p><a class="btn" href="#">查看详细 &raquo;</a></p>
                 </div><!--/span-->
             </div><!--/row-->
 

@@ -21,23 +21,16 @@ import java.sql.SQLException;
  * Time: 下午2:56
  * To change this template use File | Settings | File Templates.
  */
-@Repository("userBeanRowMapper")
-public class UserBeanRowMapper implements RowMapper<UserBean> {
-    private  static  final Logger log = LoggerFactory.getLogger(UserBeanRowMapper.class);
-    @Resource
-    DormitoryDAO dormitoryDAO;
+@Repository("userBeanNoDormitoryRowMapper")
+public class UserBeanNoDormitoryRowMapper implements RowMapper<UserBean> {
+    private  static  final Logger log = LoggerFactory.getLogger(UserBeanNoDormitoryRowMapper.class);
 
-    public UserBeanRowMapper() {
-    }
-    public UserBeanRowMapper(DormitoryDAO dormitoryDAO) {
-        this.dormitoryDAO = dormitoryDAO;
+    public UserBeanNoDormitoryRowMapper() {
     }
     @Override
     public UserBean mapRow(ResultSet resultSet, int i) throws SQLException {
         log.info("开始根据result set 转换为UserBean");
         UserBean userBean = new UserBean();
-        try
-        {
             userBean.setId(resultSet.getInt(UserBean.ID));
             userBean.setType(resultSet.getString(UserBean.TYPE));
             userBean.setNumber(resultSet.getString(UserBean.NUMBER));
@@ -70,21 +63,8 @@ public class UserBeanRowMapper implements RowMapper<UserBean> {
             userBean.setUpdateDate(resultSet.getDate(UserBean.UPDATEDATE));
             userBean.setCreateBy(resultSet.getString(UserBean.CREATEBY));
             userBean.setCreateDate(resultSet.getDate(UserBean.CREATEDATE));
-            if(dormitoryDAO==null){
-                log.info("dormitoryDAO 为空，无法正确获取学生的宿舍实体信息");
-            }
-            else {
-                Dormitory dormitory = dormitoryDAO.getDormitoryByUserID(userBean.getId());
-                userBean.setDormitory(dormitory);
-            }
             userBean.setUserType(UserType.getUserType(userBean.getType()));
             userBean.setUserState(UserState.getUserState(userBean.getState()));
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            log.error(e.toString());
-        }
         log.info("转换成功！");
         return userBean;
     }

@@ -3,6 +3,7 @@ package com.tonysys.admin.dao.Impl;
 import com.tonysys.admin.dao.DormitoryDAO;
 import com.tonysys.admin.dao.UserDAO;
 import com.tonysys.admin.model.UserBean;
+import com.tonysys.admin.rowMapper.UserBeanNoDormitoryRowMapper;
 import com.tonysys.admin.rowMapper.UserBeanRowMapper;
 import com.tonysys.util.PageIterator;
 import net.sf.ehcache.CacheManager;
@@ -33,8 +34,26 @@ public class UserDAOImpl implements UserDAO {
     CacheManager ehCacheManager;
     @Resource
     UserBeanRowMapper userBeanRowMapper;
+    @Resource
+    UserBeanNoDormitoryRowMapper userBeanNoDormitoryRowMapper;
     @Override
     public UserBean getUserByID(Integer id) {
+        log.info("根据学生id{},获取用户信息",id);
+        if(id==null){
+            return null;
+        }
+        UserBean userBean = null;
+        try{
+            userBean = tonysysJdbcTemplate.queryForObject("select * from "+UserBean.TABLENAME+" where "+UserBean.ID+"=?",new Object[]{id},userBeanNoDormitoryRowMapper);
+        }
+        catch (Exception e){
+             log.error(e.getMessage());
+        }
+        return userBean;
+    }
+
+    @Override
+    public UserBean getUserNoDormitoryByID(Integer id) {
         log.info("根据学生id{},获取用户信息",id);
         if(id==null){
             return null;
@@ -44,7 +63,7 @@ public class UserDAOImpl implements UserDAO {
             userBean = tonysysJdbcTemplate.queryForObject("select * from "+UserBean.TABLENAME+" where "+UserBean.ID+"=?",new Object[]{id},userBeanRowMapper);
         }
         catch (Exception e){
-             log.error(e.getMessage());
+            log.error(e.getMessage());
         }
         return userBean;
     }

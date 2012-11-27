@@ -1,11 +1,11 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<div class="row-fluid" style="padding: 10px;">
+<div class="hero-unit row-fluid" style="padding: 10px;">
     <h3>学生宿舍管理首页</h3>
     <p class="alert-error">说明：寝室数据项背景为红色表示该宿舍存在违纪的学生，背景为黄色表示该宿舍有留级的学生，背景为蓝色表示该宿舍有其他情况的学生，背景为绿色表示该宿舍学生都为良好</p>
-    </div>
+
 <div class="row-fluid">
     <div class="row-fluid">
-        <form class=" row-fluid">
+        <form class="form-inline row-fluid">
             <input class="input-small span3" placeholder="楼编号" name="building" value="${building}"/>
             <input class="input-small span3" placeholder="房间号" name="room" value="${room}"/>
             <input class="input-small span3" placeholder="寝室门号" name="door" value="${door}"/>
@@ -23,7 +23,7 @@
                     <td>楼编号</td>
                     <td>房间编号</td>
                     <td>寝室门号</td>
-                    <td>床位号</td>
+                    <td>床位数</td>
                     <td>电话</td>
                     <td>操作</td>
                     </tr>
@@ -74,6 +74,13 @@
         </div>
     </div>
 </form>
+<form id="updateModal">
+
+</form>
+<form id="viewUser">
+
+</form>
+</div>
 <script type="text/javascript">
     $(document).ready(function(){
         fillTable();
@@ -120,8 +127,8 @@
             dataType:"html",
             type:"get"
         }).done(function(htmlData){
-                    $("#dormitoryModal").html(htmlData);
-                    $("#addDormitory").modal("show");
+                    $("#viewUser").html(htmlData);
+                    $("#viewUserModal").modal("show");
                 });
     }
     function preInsertDormitory(){
@@ -132,7 +139,7 @@
             url:"/admin/dormitory/insert",
             type:"post",
             dataType:"json",
-            data:$("#dormitoryModal").serialize()
+            data:$("#dormitoryModal input").serialize()
         }).done(function(jsonData){
                     if(jsonData["result"]==0){
                         alert(jsonData["error"]);
@@ -150,8 +157,8 @@
             type:"get",
             dataType:"html"
         }).done(function(htmlData){
-                    $("#dormitoryModal").html(htmlData);
-                    $("#addDormitory").modal("show");
+                    $("#updateModal").html(htmlData);
+                    $("#updateDormitory").modal("show");
                 });
     }
     function updateDormitory(){
@@ -159,14 +166,14 @@
             url:"/admin/dormitory/update",
             type:"post",
             dataType:"json",
-            data:$("#dormitoryModal input").serialize()
+            data:$("#updateModal input").serialize()
         }).done(function(jsonData){
                     if(jsonData["result"]==0){
                         alert(jsonData["error"]);
                     }
                     else{
                         alert("更新成功");
-                        $("#addDormitory").modal("hide");
+                        $("#updateDormitory").modal("hide");
                         fillTable();
                     }
                 });

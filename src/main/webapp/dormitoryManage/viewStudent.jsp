@@ -2,10 +2,10 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ page import="com.tonysys.context.UserState" %>
 <!-- Modal -->
-<div id="addDormitory" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="viewUserModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="viewTile" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="myModalLabel">寝室学生信息</h3>
+        <h3 id="viewTile">寝室学生信息</h3>
     </div>
     <div class="modal-body">
         <table class="table table-bordered table-striped">

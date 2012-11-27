@@ -1,9 +1,11 @@
 package com.tonysys.admin.dao.Impl;
 
+import com.mysql.jdbc.Statement;
 import com.tonysys.admin.dao.DormitoryDAO;
 import com.tonysys.admin.model.Dormitory;
 import com.tonysys.admin.model.UserBean;
 import com.tonysys.admin.rowMapper.DormitoryRowMapper;
+import com.tonysys.admin.rowMapper.UserBeanNoDormitoryRowMapper;
 import com.tonysys.admin.rowMapper.UserBeanRowMapper;
 import com.tonysys.util.PageIterator;
 import net.sf.ehcache.CacheManager;
@@ -11,9 +13,15 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -32,17 +40,40 @@ public class DormitoryDAOImpl implements DormitoryDAO {
     CacheManager ehCacheManager;
     @Resource
     DormitoryRowMapper dormitoryRowMapper;
+    @Resource
+    UserBeanRowMapper userBeanRowMapper;
+    @Resource
+    UserBeanNoDormitoryRowMapper userBeanNoDormitoryRowMapper;
 
     @Override
     public Dormitory getDormitoryByID(Integer id) {
-        if(id ==null){
+        if(id ==null||id<=0){
             log.warn("宿舍信息id为空");
             return null;
         }
         Dormitory dormitory =null;
         log.info("获取宿舍id为{}的信息",id);
         try{
-            dormitory = tonysysJdbcTemplate.queryForObject("select * from "+Dormitory.TABLENAME+" where id=?",new Object[]{id},new DormitoryRowMapper());
+            dormitory = tonysysJdbcTemplate.queryForObject("select * from  dormitory where id=?",new Object[]{id},dormitoryRowMapper);
+            log.info("获取的宿舍信息为：{}", dormitory.toString());
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            log.error(e.getMessage());
+        }
+        return dormitory;
+    }
+
+    @Override
+    public Dormitory getDormitoryByUserID(Long id) {
+        if(id ==null||id<=0){
+            log.warn("宿舍信息id为空");
+            return null;
+        }
+        Dormitory dormitory =null;
+        log.info("获取宿舍id为{}的信息",id);
+        try{
+            dormitory = tonysysJdbcTemplate.queryForObject("select dormitory.* from  dormitory inner join bed on dormitory.id = bed.dormitoryid  where bed.userid=?",new Object[]{id},dormitoryRowMapper);
             log.info("获取的宿舍信息为：{}", dormitory.toString());
         }
         catch (Exception e){
@@ -60,7 +91,7 @@ public class DormitoryDAOImpl implements DormitoryDAO {
         }
         List<UserBean> userList =null;
         try{
-            userList =tonysysJdbcTemplate.query("select * from "+UserBean.TABLENAME+" where dormitoryid=?",new Object[]{id},new UserBeanRowMapper());
+            userList =tonysysJdbcTemplate.query("select user.* from user inner join bed on bed.userid=user.id  where bed.dormitoryid=?",new Object[]{id},userBeanNoDormitoryRowMapper);
             log.info("search userBean list size:{}",userList.size());
         }
         catch (Exception e){
@@ -71,25 +102,37 @@ public class DormitoryDAOImpl implements DormitoryDAO {
     }
 
     @Override
-    public int insert(Dormitory dormitory) {
+    public int insert(final Dormitory dormitory) {
         log.info("user begin to insert into dormitory：{}",dormitory.toString());
         if(dormitory==null){
             log.info("dormitory is null");
             return 0;
         }
         int result=0;
-        try{
-            StringBuffer insertStr= new StringBuffer("(");
+            final StringBuffer insertStr= new StringBuffer("(");
+            KeyHolder keyHolder = new  GeneratedKeyHolder();
             insertStr.append(Dormitory.BUILDING).append(",").append(Dormitory.ROOM).append(",").append(Dormitory.DOOR)
                     .append(",").append(Dormitory.BEDNUMBER).append(",").append(Dormitory.TEL).append(")");
-            result=tonysysJdbcTemplate.update("insert into "+Dormitory.TABLENAME+insertStr.toString()+" values" +
-                    "(?,?,?,?,?)",new Object[]{dormitory.getBuilding(),dormitory.getRoom(),dormitory.getDoor(),dormitory.getBednumber(),dormitory.getTel()});
+            result=tonysysJdbcTemplate.update(new PreparedStatementCreator() {
+                @Override
+                public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+                    PreparedStatement ps = connection.prepareStatement("insert into "+Dormitory.TABLENAME+insertStr.toString()+" values" +
+                            "(?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+                    ps.setString(1,dormitory.getBuilding());
+                    ps.setString(2,dormitory.getRoom());
+                    ps.setString(3,dormitory.getDoor());
+                    ps.setInt(4, dormitory.getBednumber());
+                    ps.setString(5,dormitory.getTel());
+                    return ps;
+                }
+            },keyHolder);
+            result =keyHolder.getKey().intValue();
+            if(result>0&&dormitory.getBednumber()!=null&&dormitory.getBednumber()>0){
+                for(int i=1;i<=dormitory.getBednumber();i++){
+                    tonysysJdbcTemplate.update("insert into bed (number,dormitoryid) values(?,?)",new Object[]{i,result});
+                }
+            }
             log.info("insert database dormitory {}",result==0?"failed":"success");
-        }
-        catch (Exception e){
-            log.error(e.getMessage());
-            e.printStackTrace();
-        }
         return result;
     }
 
@@ -150,7 +193,7 @@ public class DormitoryDAOImpl implements DormitoryDAO {
         }
         List<Dormitory> dormitoryList = null;
         try{
-            dormitoryList = tonysysJdbcTemplate.query("select * from "+Dormitory.TABLENAME+" where "+createWhereStr(dormitory)+pageStr+getOrderStr(order),new DormitoryRowMapper());
+            dormitoryList = tonysysJdbcTemplate.query("select * from "+Dormitory.TABLENAME+" where "+createWhereStr(dormitory)+pageStr+getOrderStr(order),dormitoryRowMapper);
         }
         catch (Exception e){
             log.error(e.getMessage());

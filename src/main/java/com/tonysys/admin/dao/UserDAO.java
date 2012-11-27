@@ -15,6 +15,7 @@ import java.util.List;
 
 public interface UserDAO {
     UserBean getUserByID(Integer id);
+    UserBean getUserNoDormitoryByID(Integer id);
     UserBean getUserByNumber(String number);
     int update(UserBean userBean);
     int count(String whereStr);

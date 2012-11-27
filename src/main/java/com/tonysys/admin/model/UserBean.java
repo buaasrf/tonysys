@@ -52,7 +52,6 @@ public class UserBean {
     public static final String UPDATEDATE="updateDate";
     public static final String CREATEBY="createBy";
     public static final String CREATEDATE="createDate";
-    public static final String DORMITORYID="dormitoryid";
 
     private static final long serialVersionUID = -7558233566805685694L;
     
