@@ -64,7 +64,7 @@ public class UserBean {
     private String trainingLevel;// 培养层次
     private String subject;// 专业
     private String grade;// 班级  
-    private String state;// 状态      
+    private Integer state;// 状态
     private String gender;// 性别  
     private String nation;// 民族  
     private String province;// 籍贯 
@@ -186,10 +186,10 @@ public class UserBean {
     public void setGrade(String grade) {
         this.grade = grade;
     }
-    public String getState() {
+    public Integer getState() {
         return state;
     }
-    public void setState(String state) {
+    public void setState(Integer state) {
         this.state = state;
     }
     public String getGender() {

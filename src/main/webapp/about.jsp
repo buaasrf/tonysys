@@ -53,9 +53,9 @@
     </div>
 </div>
 
-<div class="container-fluid" style="position:static;">
+<div class="container-fluid">
     <div class="row">
-        <div class="span3" style="position: fixed;padding-left: 50px">
+        <div class="span3">
             <div class="well sidebar-nav nav-stacked">
                 <ul class="nav nav-pills nav-stacked">
                     <li class="nav-header">学生宿舍信息管理</li>
@@ -68,7 +68,7 @@
                 </ul>
             </div><!--/.well -->
         </div><!--/span-->
-        <div id="mainContener" class="span9" style="float: right;">
+        <div id="mainContener" class="span9">
             <div class="hero-unit">
                 <h2>关于我们</h2>
                 <p>我们的详细信息……</p>

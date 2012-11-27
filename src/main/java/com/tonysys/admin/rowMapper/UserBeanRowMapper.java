@@ -46,7 +46,7 @@ public class UserBeanRowMapper implements RowMapper<UserBean> {
             userBean.setTrainingLevel(resultSet.getString(UserBean.TRAININGLEVEL));
             userBean.setSubject(resultSet.getString(UserBean.SUBJECT));
             userBean.setGrade(resultSet.getString(UserBean.GRADE));
-            userBean.setState(resultSet.getString(UserBean.STATE));
+            userBean.setState(resultSet.getInt(UserBean.STATE));
             userBean.setGender(resultSet.getString(UserBean.GENDER));
             userBean.setNation(resultSet.getString(UserBean.NATION));
             userBean.setProvince(resultSet.getString(UserBean.PROVINCE));

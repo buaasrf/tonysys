@@ -30,6 +30,8 @@ public class DormitoryDAOImpl implements DormitoryDAO {
     JdbcTemplate tonysysJdbcTemplate;
     @Resource
     CacheManager ehCacheManager;
+    @Resource
+    DormitoryRowMapper dormitoryRowMapper;
 
     @Override
     public Dormitory getDormitoryByID(Integer id) {
@@ -58,7 +60,7 @@ public class DormitoryDAOImpl implements DormitoryDAO {
         }
         List<UserBean> userList =null;
         try{
-            userList =tonysysJdbcTemplate.query("select "+UserBean.TABLENAME+".* from "+UserBean.TABLENAME+" inner join user_dormitory on "+UserBean.TABLENAME+".id=user_dormitory.userid where user_dormitory.dormitoryid=?",new Object[]{id},new UserBeanRowMapper());
+            userList =tonysysJdbcTemplate.query("select * from "+UserBean.TABLENAME+" where dormitoryid=?",new Object[]{id},new UserBeanRowMapper());
             log.info("search userBean list size:{}",userList.size());
         }
         catch (Exception e){
@@ -171,7 +173,7 @@ public class DormitoryDAOImpl implements DormitoryDAO {
         int count =count(whereStr);
         PageIterator<Dormitory> pageIterator =  PageIterator.createInstance(page,pageSize,count);
         try{
-            List<Dormitory> dormitoryList =tonysysJdbcTemplate.query("select * from "+Dormitory.TABLENAME+" where "+whereStr+" limit "+((page-1)*pageSize)+","+pageSize+ orderBy,new DormitoryRowMapper());
+            List<Dormitory> dormitoryList =tonysysJdbcTemplate.query("select * from "+Dormitory.TABLENAME+" where "+whereStr+" limit "+((page-1)*pageSize)+","+pageSize+ orderBy,dormitoryRowMapper);
             pageIterator.setData(dormitoryList);
             log.info("page search dormitory from database rows:{}",dormitoryList.size());
         }

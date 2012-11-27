@@ -2,6 +2,7 @@ package com.tonysys.admin.service.Impl;
 
 import com.tonysys.admin.dao.DormitoryDAO;
 import com.tonysys.admin.model.Dormitory;
+import com.tonysys.admin.model.UserBean;
 import com.tonysys.admin.service.DormitoryService;
 import com.tonysys.util.PageIterator;
 import org.springframework.stereotype.Service;
@@ -58,5 +59,10 @@ public class DormitoryServiceImpl implements DormitoryService {
     @Override
     public int count(String whereStr) {
         return dormitoryDAO.count(whereStr);
+    }
+
+    @Override
+    public List<UserBean> getUserByDormitoryID(Integer id) {
+        return dormitoryDAO.getUserByDormitoryID(id);
     }
 }

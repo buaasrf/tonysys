@@ -8,8 +8,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
+    <link href="/resource/css/bootstrap.css" rel="stylesheet">
     <!-- Le styles -->
-    <link href="resource/css/bootstrap.css" rel="stylesheet">
     <style type="text/css">
         body {
             padding-top: 60px;
@@ -19,11 +19,11 @@
             padding: 9px 0;
         }
     </style>
-    <link href="resource/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="/resource/css/bootstrap-responsive.min.css" rel="stylesheet">
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
-    <script src="resource/js/html5.js"></script>
+    <script src="/resource/js/html5.js"></script>
     <![endif]-->
 </head>
 
@@ -52,22 +52,22 @@
     </div>
 </div>
 
-<div class="container-fluid" style="position:static;">
+<div class="container-fluid">
     <div class="row">
-        <div class="span3" style="position: fixed;padding-left: 50px">
+        <div class="span3">
             <div class="well sidebar-nav nav-stacked">
                 <ul class="nav nav-pills nav-stacked">
                     <li class="nav-header">学生宿舍信息管理</li>
                     <li class="active" name="/userManage/index.jsp"><a href="#">学生信息管理</a></li>
                     <li name="/conductScoreManage/index.jsp"><a href="#">学生操行分管理</a></li>
                     <li name="/dormitoryManage/index.jsp"><a href="#">宿舍信息管理</a></li>
-                    <li class="nav-header">权限管理</li>
-                    <li><a href="#">权限管理</a></li>
-                    <li><a href="#">权限分配</a></li>
+                    <%--<li class="nav-header">权限管理</li>--%>
+                    <%--<li><a href="#">权限管理</a></li>--%>
+                    <%--<li><a href="#">权限分配</a></li>--%>
                 </ul>
             </div><!--/.well -->
         </div><!--/span-->
-        <div id="mainContener" class="span9" style="float: right;">
+        <div id="mainContener" class="span9">
             <div class="hero-unit">
                 <h1>Hello, world!</h1>
                 <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
@@ -90,23 +90,7 @@
                     <p><a class="btn" href="#">View details &raquo;</a></p>
                 </div><!--/span-->
             </div><!--/row-->
-            <div class="row-fluid">
-                <div class="span4">
-                    <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn" href="#">View details &raquo;</a></p>
-                </div><!--/span-->
-                <div class="span4">
-                    <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn" href="#">View details &raquo;</a></p>
-                </div><!--/span-->
-                <div class="span4">
-                    <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn" href="#">View details &raquo;</a></p>
-                </div><!--/span-->
-            </div><!--/row-->
+
         </div><!--/span-->
     </div><!--/row-->
     <footer class="navbar  navbar-fixed-bottom brand navbar-inner">
@@ -119,7 +103,7 @@
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="resource/js/jquery-1.8.2.min.js"></script>
-<script src="resource/js/bootstrap.min.js"></script>
+<script src="resource/js/bootstrap.js"></script>
 <script type="text/javascript">
     $(function(){
         $(".sidebar-nav li:has(a)").click(function(){

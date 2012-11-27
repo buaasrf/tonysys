@@ -1,6 +1,7 @@
 package com.tonysys.admin.service;
 
 import com.tonysys.admin.model.Dormitory;
+import com.tonysys.admin.model.UserBean;
 import com.tonysys.util.PageIterator;
 
 import java.util.List;
@@ -20,5 +21,6 @@ public interface DormitoryService {
     int deleteByIDs(List<Integer> IDs);
     List<Dormitory> search(Dormitory dormitory,int page,int pageSize,String order,boolean isAll);
     PageIterator<Dormitory> pageSearch(Dormitory dormitory,int page,int pageSize,String order);
+    List<UserBean> getUserByDormitoryID(Integer id);
     int count(String whereStr);
 }

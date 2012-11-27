@@ -26,6 +26,7 @@ public class Dormitory {
     private String door;
     private Integer bednumber;
     private String tel;
+    private String state;
     private List<UserBean> userList;
 
     @Override
@@ -97,6 +98,14 @@ public class Dormitory {
 
     public void setTel(String tel) {
         this.tel = tel;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     public List<UserBean> getUserList() {
