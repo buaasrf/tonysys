@@ -5,16 +5,16 @@
     </div>
 <div class="row-fluid">
     <div class="row-fluid">
-        <form class="form-inline row-fluid">
+        <form class=" row-fluid">
             <input class="input-small span3" placeholder="楼编号" name="building" value="${building}"/>
             <input class="input-small span3" placeholder="房间号" name="room" value="${room}"/>
             <input class="input-small span3" placeholder="寝室门号" name="door" value="${door}"/>
             <button type="submit" class="btn span2" onclick="fillTable();return false;">查询</button>
         </form>
         <div class="btn-group row-fluid">
-            <a href="#addDormitory"role="button" class="btn span1" data-toggle="modal" onclick="preInsertDormitory()">增加</a>
-            <a class="btn span1">修改</a>
-            <a class="btn span1">删除</a>
+            <button href="#addDormitory"role="button" class="btn span2" data-toggle="modal" onclick="preInsertDormitory()">增加</button>
+            <%--<a class="btn span1">修改</a>--%>
+            <%--<a class="btn span1">删除</a>--%>
         </div>
         <div class="bs-docs-container">
             <table class="table table-bordered table-striped">

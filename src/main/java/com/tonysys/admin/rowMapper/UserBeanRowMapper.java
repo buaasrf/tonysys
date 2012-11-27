@@ -3,6 +3,7 @@ package com.tonysys.admin.rowMapper;
 import com.tonysys.admin.dao.DormitoryDAO;
 import com.tonysys.admin.model.Dormitory;
 import com.tonysys.admin.model.UserBean;
+import com.tonysys.context.UserState;
 import com.tonysys.context.UserType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,6 +79,7 @@ public class UserBeanRowMapper implements RowMapper<UserBean> {
                 userBean.setDormitory(dormitory);
             }
             userBean.setUserType(UserType.getUserType(userBean.getType()));
+            userBean.setUserState(UserState.getUserState(userBean.getState()));
         }
         catch (Exception e)
         {

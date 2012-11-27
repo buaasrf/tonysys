@@ -3,6 +3,7 @@
  */
 package com.tonysys.admin.model;
 
+import com.tonysys.context.UserState;
 import com.tonysys.context.UserType;
 
 import java.util.Date;
@@ -91,6 +92,7 @@ public class UserBean {
 
     private Dormitory dormitory;//学生所在宿舍
     private UserType userType;
+    private UserState userState;
     @Override
     public boolean equals(Object obj) {
         if (null == obj) {
@@ -341,5 +343,13 @@ public class UserBean {
 
     public void setUserType(UserType userType) {
         this.userType = userType;
+    }
+
+    public UserState getUserState() {
+        return userState;
+    }
+
+    public void setUserState(UserState userState) {
+        this.userState = userState;
     }
 }

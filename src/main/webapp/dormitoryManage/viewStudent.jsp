@@ -26,15 +26,15 @@
             </thead>
             <tbody >
                 <c:forEach var="user" items="${userList}">
-                    <tr>
+                    <tr  class="${user.userState.color}">
                         <td>${user.name}</td>
-                        <td>${user.type}</td>
+                        <td>${user.userType.value}</td>
                         <td>${user.number}</td>
                         <td>${user.dept}</td>
                         <td>${user.subject}</td>
                         <td>${user.grade}</td>
                         <td>${user.gender}</td>
-                        <td>${user.state}</td>
+                        <td>${user.userState.value}</td>
                         <td>${user.nation}</td>
                         <td>${user.phone}</td>
                     </tr>
