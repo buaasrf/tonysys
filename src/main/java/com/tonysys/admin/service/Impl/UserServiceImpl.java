@@ -26,6 +26,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public int insert(UserBean userBean) {
+        return userDAO.insert(userBean);
+    }
+
+    @Override
     public UserBean getUserByNumber(String number) {
         return userDAO.getUserByNumber(number);
     }

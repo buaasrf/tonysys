@@ -65,7 +65,7 @@ public class DormitoryDAOImpl implements DormitoryDAO {
     }
 
     @Override
-    public Dormitory getDormitoryByUserID(Long id) {
+    public Dormitory getDormitoryByUserID(Integer id) {
         if(id ==null||id<=0){
             log.warn("宿舍信息id为空");
             return null;

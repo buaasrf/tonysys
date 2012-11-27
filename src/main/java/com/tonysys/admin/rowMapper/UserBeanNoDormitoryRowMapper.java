@@ -1,5 +1,6 @@
 package com.tonysys.admin.rowMapper;
 
+import com.tonysys.admin.dao.BedDAO;
 import com.tonysys.admin.dao.DormitoryDAO;
 import com.tonysys.admin.model.Dormitory;
 import com.tonysys.admin.model.UserBean;
@@ -24,7 +25,8 @@ import java.sql.SQLException;
 @Repository("userBeanNoDormitoryRowMapper")
 public class UserBeanNoDormitoryRowMapper implements RowMapper<UserBean> {
     private  static  final Logger log = LoggerFactory.getLogger(UserBeanNoDormitoryRowMapper.class);
-
+    @Resource
+    BedDAO bedDAO;
     public UserBeanNoDormitoryRowMapper() {
     }
     @Override
@@ -63,6 +65,9 @@ public class UserBeanNoDormitoryRowMapper implements RowMapper<UserBean> {
             userBean.setUpdateDate(resultSet.getDate(UserBean.UPDATEDATE));
             userBean.setCreateBy(resultSet.getString(UserBean.CREATEBY));
             userBean.setCreateDate(resultSet.getDate(UserBean.CREATEDATE));
+            if(bedDAO!=null){
+                userBean.setBed(bedDAO.getBedByUserID(userBean.getId()));
+            }
             userBean.setUserType(UserType.getUserType(userBean.getType()));
             userBean.setUserState(UserState.getUserState(userBean.getState()));
         log.info("转换成功！");

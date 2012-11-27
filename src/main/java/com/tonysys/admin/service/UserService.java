@@ -15,6 +15,7 @@ import java.util.List;
 public interface UserService {
     UserBean getUserByID(Integer id);
     UserBean getUserByNumber(String number);
+    int insert(UserBean userBean);
     int updateUser(UserBean userBean);
     int deleteUserByID(Integer id);
     int deleteUserByNumber(String number);

@@ -1,5 +1,6 @@
 package com.tonysys.admin.rowMapper;
 
+import com.tonysys.admin.dao.BedDAO;
 import com.tonysys.admin.dao.DormitoryDAO;
 import com.tonysys.admin.model.Dormitory;
 import com.tonysys.admin.model.UserBean;
@@ -26,6 +27,8 @@ public class UserBeanRowMapper implements RowMapper<UserBean> {
     private  static  final Logger log = LoggerFactory.getLogger(UserBeanRowMapper.class);
     @Resource
     DormitoryDAO dormitoryDAO;
+    @Resource
+    BedDAO bedDAO;
 
     public UserBeanRowMapper() {
     }
@@ -70,6 +73,9 @@ public class UserBeanRowMapper implements RowMapper<UserBean> {
             userBean.setUpdateDate(resultSet.getDate(UserBean.UPDATEDATE));
             userBean.setCreateBy(resultSet.getString(UserBean.CREATEBY));
             userBean.setCreateDate(resultSet.getDate(UserBean.CREATEDATE));
+            if(bedDAO!=null){
+                userBean.setBed(bedDAO.getBedByUserID(userBean.getId()));
+            }
             if(dormitoryDAO==null){
                 log.info("dormitoryDAO 为空，无法正确获取学生的宿舍实体信息");
             }

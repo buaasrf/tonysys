@@ -15,7 +15,7 @@ import java.util.List;
  */
 public interface DormitoryDAO {
     Dormitory getDormitoryByID(Integer id);
-    Dormitory getDormitoryByUserID(Long id);
+    Dormitory getDormitoryByUserID(Integer id);
     List<UserBean> getUserByDormitoryID(Integer id);
     int insert(Dormitory dormitory );
     int update(Dormitory dormitory);

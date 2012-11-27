@@ -1,6 +1,9 @@
 package com.tonysys.admin.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.tonysys.admin.model.Bed;
+import com.tonysys.admin.model.ResultMSG;
+import com.tonysys.admin.model.UserBean;
 import com.tonysys.admin.service.UserService;
 import com.tonysys.util.FastJsonHelper;
 import org.springframework.stereotype.Controller;
@@ -27,5 +30,30 @@ public class UserController {
     @ResponseBody
     public String getUserByNumber(@PathVariable String number){
         return JSON.toJSONString(userService.getUserByNumber(number), FastJsonHelper.features);
+    }
+    @RequestMapping(value = "/insert")
+    @ResponseBody
+    public String insert(UserBean userBean,Bed bed){
+        ResultMSG resultMSG = new ResultMSG();
+        if(userBean==null){
+            resultMSG.setError("学生信息为空，不能完成添加");
+        }
+        else {
+            if(bed!=null&&bed.getId()!=null&&bed.getId()>0){
+                userBean.setBed(bed);
+            }
+            try{
+                resultMSG.setResult(userService.insert(userBean));
+                if(resultMSG.getResult()==0){
+                    resultMSG.setError("插入数据库失败");
+                }
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+                resultMSG.setError(e.getMessage());
+            }
+        }
+        return JSON.toJSONString(resultMSG);
     }
 }

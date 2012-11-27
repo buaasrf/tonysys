@@ -1,5 +1,6 @@
 package com.tonysys.admin.dao.Impl;
 
+import com.mysql.jdbc.Statement;
 import com.tonysys.admin.dao.DormitoryDAO;
 import com.tonysys.admin.dao.UserDAO;
 import com.tonysys.admin.model.UserBean;
@@ -11,9 +12,15 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -83,6 +90,45 @@ public class UserDAOImpl implements UserDAO {
             log.error(e.getMessage());
         }
         return userBean;
+    }
+
+    @Override
+    public int insert(final UserBean userBean) {
+        if(userBean==null){
+            return 0;
+        }
+        int result = 0;
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        result = tonysysJdbcTemplate.update(new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+                PreparedStatement ps =connection.prepareStatement("insert into user (name," +
+                        "number,gender,birth,idNumber,province,dept," +
+                        "trainingLevel,subject,grade,homePhone,phone) " +
+                        "values(?,?,?,?,?,?,?,?,?,?,?,?)",
+                        Statement.RETURN_GENERATED_KEYS);
+                ps.setString(1,userBean.getName());
+                ps.setString(2,userBean.getNumber());
+                ps.setString(3,userBean.getGender());
+                ps.setString(4,userBean.getBirth());
+                ps.setString(5,userBean.getIdNumber());
+                ps.setString(6,userBean.getProvince());
+                ps.setString(7,userBean.getDept());
+                ps.setString(8,userBean.getTrainingLevel());
+                ps.setString(9,userBean.getSubject());
+                ps.setString(10,userBean.getGrade());
+                ps.setString(11,userBean.getHomePhone());
+                ps.setString(12,userBean.getPhone());
+                return ps;
+            }
+        },keyHolder);
+        if(result>0){
+            result = keyHolder.getKey().intValue();
+            if(userBean.getBed()!=null&&userBean.getBed().getId()!=null&&userBean.getBed().getId()>0){
+                tonysysJdbcTemplate.update("update bed set userid=? where id=?",new Object[]{result,userBean.getBed().getId()});
+            }
+        }
+        return result;
     }
 
     @Override

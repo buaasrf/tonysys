@@ -1,9 +1,11 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<div class="hero-unit">
+
+<div id="userInsertForm" class="hero-unit">
     <h3>学生信息管理首页</h3>
     <div class="row-fluid ">
-        <div class="btn-group-vertical">
-            <button class="btn">新增/修改</button>
+        <div class="btn-group">
+            <button class="btn" onclick="insertUser();return false;">新增/修改</button>
+            <button class="btn" onclick="reset();return false;">清空</button>
         </div>
     </div>
     <hr>
@@ -21,7 +23,10 @@
             </div>
             <div class="span4">
                 <span class="span5">性别：</span>
-                <input class="span7" id="gender" name="gender">
+                <select class="span7" id="gender" name="gender">
+                    <option value="男">男</option>
+                    <option value="女">女</option>
+                </select>
             </div>
         </div>
         <div class="row-fluid">
@@ -56,7 +61,7 @@
             </div>
             <div class="span6">
                 <span class="span4">班级：</span>
-                <input class="grade" id="grade" name="dept">
+                <input class="span8" id="grade" name="grade">
             </div>
 
         </div>
@@ -78,15 +83,37 @@
     <div id="dormitoryInfo" class="row-fluid">
         <div class="row-fluid">
             <button class="btn span2" >》选择宿舍</button>
-            <input class="span2" readonly="true"  placeholder="栋">栋
-            <input class="span2" readonly="true"  placeholder="房">房
-            <input class="span2" readonly="true"  placeholder="间">间
-            <input class="span2" readonly="true">宿舍号
+            <input class="span2" readonly="true" name="dormitory.building"  placeholder="栋">栋
+            <input class="span2" readonly="true" name="dormitory.room"  placeholder="房">房
+            <input class="span2" readonly="true" name="dormitory.door" placeholder="间">间
+            <input class="span2" readonly="true" name="dormitory.id">宿舍号
         </div>
         <div class="row-fluid">
-            宿舍电话：<input class="span3" name="tel" id="tel">
-            床位号：<input class="span3" name="bednumber" id="bednumber">
+            <input type="hidden" id="bedid" name="bed.id">
+            宿舍电话：<input class="span3" name="tel" id="dormitory.tel">
+            床位号：<input class="span3" name="bednumber" id="bed.number">
             <button class="btn-info">检查床位是否被占用</button>
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    function insertUser(){
+        $.ajax({
+           url:"/admin/user/insert",
+            type:"post",
+            dataType:"json",
+            data:$("#userInsertForm input").serialize()
+        }).done(function(jsonData){
+                     if(jsonData["resulte"]==0){
+                         alert(jsonData["error"]);
+                     }
+                    else{
+                         alert("添加成功");
+                     }
+                });
+    }
+    function reset(){
+        $("#userInsertForm input").val("");
+    }
+
+</script>

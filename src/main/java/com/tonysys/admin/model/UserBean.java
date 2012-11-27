@@ -55,7 +55,7 @@ public class UserBean {
 
     private static final long serialVersionUID = -7558233566805685694L;
     
-    private long id;
+    private Integer id;
     private String type;// 用户类别（不同权限）-- student, 军体部长,劳生部长,纪检部长, teacher, admin, root
     private String number;// 学号/工号 
     private String password;// 密码 
@@ -89,6 +89,7 @@ public class UserBean {
     private String createBy;
     private Date createDate;
 
+    private Bed bed;
     private Dormitory dormitory;//学生所在宿舍
     private UserType userType;
     private UserState userState;
@@ -133,10 +134,10 @@ public class UserBean {
     }
 
     
-    public long getId() {
+    public Integer getId() {
         return id;
     }
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
     public String getType() {
@@ -326,6 +327,14 @@ public class UserBean {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    public Bed getBed() {
+        return bed;
+    }
+
+    public void setBed(Bed bed) {
+        this.bed = bed;
     }
 
     public Dormitory getDormitory() {
