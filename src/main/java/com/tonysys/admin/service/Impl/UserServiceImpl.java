@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int updateUser(UserBean userBean) {
-        return 0;  
+        return userDAO.update(userBean);
     }
 
     @Override
