@@ -74,6 +74,7 @@ public class LoginFilter implements Filter {
         {
             log.info("user not login");
             ((HttpServletRequest)request).getRequestDispatcher(notLoginURL).forward(request,response);
+            return;
         }
         chain.doFilter(request,response);
 
