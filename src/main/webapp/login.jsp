@@ -58,14 +58,14 @@
 
 <div class="container">
 
-    <form class="form-signin" action="/admin/login/" method="post">
+    <form class="form-signin" action="/admin/signin" method="post">
         <h2 class="form-signin-heading">学生宿舍管理系统</h2>
-        <input type="text" name="number"  class="input-block-level" placeholder="学号" value="${number}">
+        <input type="text" id="number" name="number"  class="input-block-level" placeholder="学号" value="${number}">
         <c:if test="${error!=null}">
             <div class="alert-error">${error}</div>
         </c:if>
-        <input type="password" name="password"  class="input-block-level" placeholder="密码">
-        <select name="userType" class="input-block-level">
+        <input type="password" id="password" name="password"  class="input-block-level" placeholder="密码">
+        <select name="userType" id="userType" class="input-block-level">
             <%
                 for (UserType userType :UserType.getAllUserType())
                 {
@@ -78,7 +78,7 @@
         <label class="checkbox">
             <input type="checkbox" value="remember-me"> 记住我
         </label>
-        <button class="btn btn-large btn-primary" type="button" onclick="submit()">登录</button>
+        <button class="btn btn-large btn-primary" type="button" onclick="userLogin();return false;">登录</button>
 
     </form>
 
@@ -89,5 +89,11 @@
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="/resource/js/jquery-1.8.2.min.js"></script>
 <script src="/resource/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    function userLogin(){
+        $("form").action ="/admin/login/"+$("#number").val()+"/"+$("#password").val()+"/in";
+        $("form").submit();
+    }
+</script>
 </body>
 </html>

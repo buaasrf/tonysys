@@ -34,7 +34,7 @@
         <filter-class>com.tonysys.filter.LoginFilter</filter-class>
         <init-param>
             <param-name>excludeURL</param-name>
-            <param-value>/login.jsp,/about.jsp,/contactUs.jsp,/resource/**,/admin/login*,/admin/login/**</param-value>
+            <param-value>/login.jsp,/about.jsp,/contactUs.jsp,/resource/**,/admin*,/admin/login*,/admin/login/**</param-value>
         </init-param>
     </filter>
     <filter-mapping>

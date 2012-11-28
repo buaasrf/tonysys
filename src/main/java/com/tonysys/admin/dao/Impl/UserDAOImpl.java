@@ -11,6 +11,7 @@ import net.sf.ehcache.CacheManager;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -85,9 +86,8 @@ public class UserDAOImpl implements UserDAO {
         try{
             userBean = tonysysJdbcTemplate.queryForObject("select * from "+UserBean.TABLENAME+" where "+UserBean.NUMBER+"=?",new Object[]{number},userBeanRowMapper);
         }
-        catch (Exception e){
-            e.printStackTrace();
-            log.error(e.getMessage());
+        catch (EmptyResultDataAccessException e){
+            log.error("根据number为{},的用户不存在。",userBean.getNumber());
         }
         return userBean;
     }

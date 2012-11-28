@@ -28,12 +28,12 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 @Controller
-@RequestMapping("/login")
+@RequestMapping("/")
 public class LoginController {
     @Resource
     UserService userService;
-    @RequestMapping(value = "/")
-    public String userLogin(HttpServletRequest request,HttpServletResponse response,String number,String password,Model model){
+    @RequestMapping(value = "/signin")
+    public String userLogin(HttpServletRequest request,HttpServletResponse response, String number, String password,Model model){
         String error="";
         int flag=1;
 
@@ -61,7 +61,7 @@ public class LoginController {
         }
         model.addAttribute("error",error).addAttribute("number",number);
         if(flag==0){
-            return "redirect:/login.jsp";
+            return "/login";
         }
         String userToken = number+"_"+password;
         request.getSession().setAttribute(UserContext.USER_TOKEN,userBean);
