@@ -129,12 +129,56 @@ class DriverAgent:
         lng = origin.lng + (destination.lng - origin.lng) * progress
         return Location(lat=lat, lng=lng)
 
+    def is_pre_dispatchable(self, remaining_seconds: float) -> bool:
+        """
+        判断是否可以预派单：行程剩余时间 ≤ 5 分钟
+        且当前没有已预派的下一单
+        """
+        if self.profile.status != DriverStatus.IN_TRIP:
+            return False
+        if self.profile.next_order_id is not None:
+            return False
+        return remaining_seconds <= 300  # 5 分钟
+
+    def decide_accept_pre_dispatch(self, order: Order, remaining_seconds: float) -> bool:
+        """
+        决策：行程即将结束时，是否接受预派的下一单
+        考虑下一单起点与当前行程终点的距离
+        """
+        if not self.is_pre_dispatchable(remaining_seconds):
+            return False
+
+        # 预派单评估：用当前行程终点而非当前位置来评估
+        # 激进型司机更愿意连续接单
+        base_prob = 0.6
+        if self.profile.strategy == "aggressive":
+            base_prob = 0.85
+        elif self.profile.strategy == "conservative":
+            base_prob = 0.4
+
+        # 溢价单加分
+        if order.surge_multiplier > 1.0:
+            base_prob += 0.1
+
+        return random.random() < base_prob
+
+    def accept_pre_dispatch(self, order_id: str):
+        """接受预派单（行程结束后自动切换为新单的派单状态）"""
+        self.profile.next_order_id = order_id
+        self.profile.status = DriverStatus.PRE_DISPATCHED
+
     def complete_trip(self, fare: float):
         """完成行程"""
         self.profile.total_trips += 1
         self.profile.total_revenue += fare
-        self.profile.status = DriverStatus.IDLE
-        self.profile.current_order_id = None
+        # 如果有预派单，切换到 DISPATCHED 状态
+        if self.profile.next_order_id:
+            self.profile.current_order_id = self.profile.next_order_id
+            self.profile.next_order_id = None
+            self.profile.status = DriverStatus.DISPATCHED
+        else:
+            self.profile.status = DriverStatus.IDLE
+            self.profile.current_order_id = None
 
     def go_online(self, location: Location):
         self.profile.status = DriverStatus.IDLE
@@ -143,6 +187,7 @@ class DriverAgent:
     def go_offline(self):
         self.profile.status = DriverStatus.OFFLINE
         self.profile.current_order_id = None
+        self.profile.next_order_id = None
 
     def accept_order(self, order_id: str):
         self.profile.status = DriverStatus.DISPATCHED

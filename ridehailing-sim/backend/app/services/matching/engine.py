@@ -8,6 +8,7 @@ from typing import List, Dict, Tuple, Optional
 from dataclasses import dataclass
 
 from ...models.entities import Order, OrderStatus, DriverProfile, DriverStatus, Location
+from ..pricing.engine import VEHICLE_TYPE_TO_CATEGORY
 from ..geo.spatial import haversine_distance
 from ...utils.logger import get_logger
 
@@ -70,6 +71,12 @@ class MatchingEngine:
                 if pickup_dist > self.max_pickup_distance_km:
                     continue
 
+                # 品类过滤：premium 订单不匹配 economy 车型
+                driver_cat = VEHICLE_TYPE_TO_CATEGORY.get(driver.vehicle_type, "economy")
+                order_cat = getattr(order, 'vehicle_category', 'economy')
+                if order_cat == "premium" and driver_cat == "economy":
+                    continue
+
                 score = self._compute_match_score(order, driver, pickup_dist)
 
                 if score > best_score:
@@ -108,6 +115,12 @@ class MatchingEngine:
 
                 pickup_dist = haversine_distance(driver.current_location, order.origin)
                 if pickup_dist > self.max_pickup_distance_km:
+                    continue
+
+                # 品类过滤
+                driver_cat = VEHICLE_TYPE_TO_CATEGORY.get(driver.vehicle_type, "economy")
+                order_cat = getattr(order, 'vehicle_category', 'economy')
+                if order_cat == "premium" and driver_cat == "economy":
                     continue
 
                 score = self._compute_match_score(order, driver, pickup_dist)
@@ -167,8 +180,14 @@ class MatchingEngine:
             elif driver.distance_preference == "medium":
                 score += 0.05
 
-        # 5. 车辆类型匹配（高端车辆高溢价订单优先）
-        if driver.vehicle_type == "luxury" and order.surge_multiplier > 1.5:
-            score += 0.1
+        # 5. 车型品类匹配
+        driver_category = VEHICLE_TYPE_TO_CATEGORY.get(driver.vehicle_type, "economy")
+        order_category = getattr(order, 'vehicle_category', 'economy')
+        if driver_category == order_category:
+            score += 0.15  # 品类完全匹配
+        elif driver_category == "comfort" and order_category == "economy":
+            score += 0.05  # 舒适型可降级服务经济型
+        elif driver_category == "economy" and order_category != "economy":
+            score -= 0.2   # 经济型车不适合服务高品类订单
 
         return score

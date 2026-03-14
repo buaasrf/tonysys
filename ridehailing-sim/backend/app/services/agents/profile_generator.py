@@ -32,6 +32,12 @@ STRATEGY_WEIGHTS = [0.2, 0.6, 0.2]
 TRIP_PATTERNS = ["commuter", "random", "nightlife"]
 TRIP_PATTERN_WEIGHTS = [0.6, 0.3, 0.1]
 
+MEMBERSHIPS = ["normal", "silver", "gold", "platinum"]
+MEMBERSHIP_WEIGHTS = [0.5, 0.25, 0.15, 0.1]
+
+PREFERRED_VEHICLES = ["economy", "comfort", "premium"]
+PREFERRED_VEHICLE_WEIGHTS = [0.65, 0.28, 0.07]
+
 
 def _random_name(gender: str = "male") -> str:
     surname = random.choice(SURNAMES)
@@ -113,6 +119,14 @@ def generate_passenger_profiles(
 
         trip_pattern = _weighted_choice(TRIP_PATTERNS, TRIP_PATTERN_WEIGHTS)
 
+        membership = _weighted_choice(MEMBERSHIPS, MEMBERSHIP_WEIGHTS)
+        preferred_vehicle = _weighted_choice(PREFERRED_VEHICLES, PREFERRED_VEHICLE_WEIGHTS)
+
+        # 高会员等级的乘客倾向选择更高品类车型
+        if membership in ("gold", "platinum") and random.random() < 0.4:
+            preferred_vehicle = _weighted_choice(
+                ["comfort", "premium"], [0.6, 0.4])
+
         profile = PassengerProfile(
             passenger_id=f"passenger_{uuid.uuid4().hex[:8]}",
             name=_random_name(gender),
@@ -127,6 +141,8 @@ def generate_passenger_profiles(
             cancel_probability=random.uniform(0.02, 0.1),
             surge_tolerance=random.uniform(1.3, 2.5),
             trip_pattern=trip_pattern,
+            membership=membership,
+            preferred_vehicle=preferred_vehicle,
         )
         profiles.append(profile)
 

@@ -68,6 +68,9 @@ class Order:
     surge_multiplier: float = 1.0
     total_fare: float = 0.0
 
+    # 车型品类
+    vehicle_category: str = "economy"  # economy / comfort / premium
+
     # 区域信息
     origin_hex: str = ""         # H3 六边形 ID
     destination_hex: str = ""
@@ -102,6 +105,7 @@ class DriverStatus(str, Enum):
     IDLE = "idle"                 # 空闲等单
     DISPATCHED = "dispatched"     # 已派单，前往接客
     IN_TRIP = "in_trip"           # 载客中
+    PRE_DISPATCHED = "pre_dispatched"  # 行程即将结束，已预派下一单
     RETURNING = "returning"       # 送完客回程
 
 
@@ -137,6 +141,7 @@ class DriverProfile:
     status: DriverStatus = DriverStatus.OFFLINE
     current_location: Optional[Location] = None
     current_order_id: Optional[str] = None
+    next_order_id: Optional[str] = None   # 预派单（行程结束前5分钟可接下一单）
 
     # 统计
     total_trips: int = 0
@@ -192,6 +197,15 @@ class PassengerProfile:
 
     # 出行模式
     trip_pattern: str = "commuter"   # commuter / random / nightlife
+
+    # 会员等级: normal / silver / gold / platinum
+    membership: str = "normal"
+    # 偏好车型: economy / comfort / premium (对应 sedan / suv / luxury)
+    preferred_vehicle: str = "economy"
+
+    # 排队加价意愿：愿意加价调度更远的车
+    willing_to_pay_extra: bool = False      # 是否愿意加价
+    extra_surge_ratio: float = 0.0          # 额外加价比例 (0.2 = 加价20%)
 
     def to_dict(self) -> Dict[str, Any]:
         return {
