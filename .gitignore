@@ -3,3 +3,6 @@
 .idea/
 target/
 *.log
+ridehailing-sim/backend/uploads/
+__pycache__/
+*.pyc
