@@ -163,7 +163,9 @@ class TransportSimulationEngine:
                 # === 仿真主循环 ===
                 self._step_driver_decisions(current_hour)
                 self._step_passenger_decisions(current_hour, sim_seconds)
+                self._step_passenger_bidding(sim_seconds)
                 self._step_matching()
+                self._step_pre_dispatch(sim_seconds)
                 self._step_trip_progress(sim_seconds)
                 self._step_pricing_update()
                 self._step_order_timeout(sim_seconds)
@@ -268,7 +270,13 @@ class TransportSimulationEngine:
                 dest_hex = self.hex_grid.locate(destination) or ""
                 zone_surge = self.pricing_engine.get_zone_surge(origin_hex) if origin_hex else 1.0
 
-                fare = self.pricing_engine.calculate_fare(distance, duration, zone_surge)
+                is_off_peak = current_hour in self.config.time_config.off_peak
+                # 乘客偏好车型 → 品类定价
+                vehicle_category = passenger.profile.preferred_vehicle
+                membership = passenger.profile.membership
+                fare = self.pricing_engine.calculate_fare(
+                    distance, duration, zone_surge, is_off_peak,
+                    vehicle_category=vehicle_category, membership=membership)
 
                 order = Order(
                     order_id=f"order_{uuid.uuid4().hex[:10]}",
@@ -281,6 +289,7 @@ class TransportSimulationEngine:
                     surge_multiplier=zone_surge,
                     total_fare=fare.total_fare,
                     base_fare=fare.subtotal,
+                    vehicle_category=vehicle_category,
                     origin_hex=origin_hex,
                     destination_hex=dest_hex,
                 )
@@ -296,6 +305,39 @@ class TransportSimulationEngine:
                                 surge=zone_surge,
                                 fare=fare.total_fare)
 
+    def _step_passenger_bidding(self, sim_seconds: int):
+        """排队乘客加价决策：等待中的乘客可能愿意加价来调度更远的车"""
+        for oid in list(self.pending_orders):
+            order = self.orders.get(oid)
+            if not order or order.status != OrderStatus.PENDING:
+                continue
+
+            passenger = self.passengers.get(order.passenger_id)
+            if not passenger:
+                continue
+
+            wait_seconds = sim_seconds - order.created_at
+            if passenger.decide_bid_extra(wait_seconds, order.surge_multiplier):
+                # 乘客加价：更新订单的 surge 和费用
+                extra_ratio = passenger.profile.extra_surge_ratio
+                new_surge = order.surge_multiplier + extra_ratio
+                new_surge = min(new_surge, self.pricing_engine.max_surge)
+                order.surge_multiplier = round(new_surge, 2)
+
+                # 重新计算费用
+                is_off_peak = False  # 加价单不享受平峰优惠
+                fare = self.pricing_engine.calculate_fare(
+                    order.distance_km, order.duration_minutes, new_surge, is_off_peak)
+                order.total_fare = fare.total_fare
+
+                self._log_event("passenger_bid_extra",
+                                order_id=order.order_id,
+                                passenger_id=order.passenger_id,
+                                extra_ratio=extra_ratio,
+                                new_surge=new_surge,
+                                new_fare=fare.total_fare,
+                                wait_seconds=wait_seconds)
+
     def _step_matching(self):
         """订单匹配（MiroFish 完全没有的核心逻辑）"""
         if not self.pending_orders:
@@ -307,15 +349,94 @@ class TransportSimulationEngine:
                         if d.status == DriverStatus.IDLE]
 
         if not pending or not idle_drivers:
+            # 即使没有空闲司机，加价订单可能匹配更远的车（扩大搜索半径）
+            if not pending:
+                return
+
+        # 对加价乘客扩大匹配搜索半径
+        bid_orders = [o for o in pending if self.passengers.get(o.passenger_id)
+                      and self.passengers[o.passenger_id].profile.willing_to_pay_extra]
+        normal_orders = [o for o in pending if o not in bid_orders]
+
+        # 常规匹配
+        if normal_orders and idle_drivers:
+            if self.config.matching_config.strategy == "batch":
+                matches = self.matching_engine.batch_match(normal_orders, idle_drivers)
+            else:
+                matches = self.matching_engine.greedy_match(normal_orders, idle_drivers)
+            self._apply_matches(matches)
+
+        # 加价订单扩大搜索半径（最大接驾距离 × 1.5）
+        if bid_orders:
+            remaining_idle = [d.profile for d in self.drivers.values()
+                              if d.status == DriverStatus.IDLE]
+            if remaining_idle:
+                original_max = self.matching_engine.max_pickup_distance_km
+                self.matching_engine.max_pickup_distance_km = original_max * 1.5
+                bid_matches = self.matching_engine.greedy_match(bid_orders, remaining_idle)
+                self.matching_engine.max_pickup_distance_km = original_max
+                self._apply_matches(bid_matches, is_bid=True)
+
+    def _step_pre_dispatch(self, sim_seconds: int):
+        """
+        预派单：即将送达（剩余 ≤ 5 分钟）的司机可以接下一单
+        减少司机空闲等待时间，提高整体运力利用率
+        """
+        if not self.pending_orders:
             return
 
-        # 执行匹配
-        if self.config.matching_config.strategy == "batch":
-            matches = self.matching_engine.batch_match(pending, idle_drivers)
-        else:
-            matches = self.matching_engine.greedy_match(pending, idle_drivers)
+        pending = [self.orders[oid] for oid in self.pending_orders
+                   if self.orders[oid].status == OrderStatus.PENDING]
+        if not pending:
+            return
 
-        # 应用匹配结果
+        for driver in self.drivers.values():
+            if driver.status not in (DriverStatus.IN_TRIP, DriverStatus.PRE_DISPATCHED):
+                continue
+            if driver.profile.next_order_id is not None:
+                continue  # 已有预派单
+
+            current_order = self.orders.get(driver.profile.current_order_id)
+            if not current_order or current_order.status != OrderStatus.IN_TRIP:
+                continue
+
+            # 计算剩余行程时间
+            trip_seconds = current_order.duration_minutes * 60
+            elapsed = sim_seconds - (current_order.trip_start_at or sim_seconds)
+            remaining = trip_seconds - elapsed
+
+            if not driver.is_pre_dispatchable(remaining):
+                continue
+
+            # 为这个即将空闲的司机找一个合适的订单
+            # 用行程终点而非当前位置来计算距离
+            best_order = None
+            best_dist = float('inf')
+            for order in pending:
+                dist = haversine_distance(current_order.destination, order.origin)
+                if dist < self.matching_engine.max_pickup_distance_km and dist < best_dist:
+                    best_dist = dist
+                    best_order = order
+
+            if best_order and driver.decide_accept_pre_dispatch(best_order, remaining):
+                driver.accept_pre_dispatch(best_order.order_id)
+                best_order.status = OrderStatus.MATCHED
+                best_order.driver_id = driver.driver_id
+                best_order.matched_at = sim_seconds
+                best_order.pickup_distance_km = best_dist
+                best_order.pickup_duration_minutes = (best_dist * 1.3 / max(driver.profile.avg_speed_kmh, 10)) * 60
+
+                if best_order.order_id in self.pending_orders:
+                    self.pending_orders.remove(best_order.order_id)
+
+                self._log_event("pre_dispatch",
+                                order_id=best_order.order_id,
+                                driver_id=driver.driver_id,
+                                remaining_seconds=round(remaining, 0),
+                                pickup_dist_from_dest=round(best_dist, 2))
+
+    def _apply_matches(self, matches, is_bid: bool = False):
+        """应用匹配结果"""
         for match in matches:
             order = self.orders[match.order_id]
             driver = self.drivers[match.driver_id]
@@ -333,7 +454,8 @@ class TransportSimulationEngine:
                 if order.order_id in self.pending_orders:
                     self.pending_orders.remove(order.order_id)
 
-                self._log_event("order_matched",
+                event_type = "order_matched_bid" if is_bid else "order_matched"
+                self._log_event(event_type,
                                 order_id=order.order_id,
                                 driver_id=match.driver_id,
                                 pickup_dist=match.pickup_distance_km,
@@ -381,15 +503,24 @@ class TransportSimulationEngine:
                     # 行程完成
                     order.status = OrderStatus.COMPLETED
                     order.completed_at = sim_seconds
-                    driver.complete_trip(order.total_fare)
                     driver.profile.current_location = order.destination
+
+                    # 司机完成行程（如有预派单会自动切换）
+                    has_next = driver.profile.next_order_id is not None
+                    driver.complete_trip(order.total_fare)
                     self.state.completed_orders += 1
+
+                    # 重置乘客加价状态
+                    passenger = self.passengers.get(order.passenger_id)
+                    if passenger:
+                        passenger.reset_bid_state()
 
                     self._log_event("trip_completed",
                                     order_id=order.order_id,
                                     driver_id=order.driver_id,
                                     fare=order.total_fare,
-                                    distance=order.distance_km)
+                                    distance=order.distance_km,
+                                    has_pre_dispatch=has_next)
                 else:
                     # 更新位置
                     progress = elapsed / max(trip_seconds, 1)
@@ -457,8 +588,13 @@ class TransportSimulationEngine:
         idle_drivers = sum(1 for d in self.drivers.values()
                            if d.status == DriverStatus.IDLE)
         in_trip_drivers = sum(1 for d in self.drivers.values()
-                              if d.status == DriverStatus.IN_TRIP)
+                              if d.status in (DriverStatus.IN_TRIP, DriverStatus.PRE_DISPATCHED))
+        pre_dispatched = sum(1 for d in self.drivers.values()
+                             if d.status == DriverStatus.PRE_DISPATCHED)
         pending_count = len(self.pending_orders)
+        bidding_orders = sum(1 for oid in self.pending_orders
+                             if self.passengers.get(self.orders[oid].passenger_id)
+                             and self.passengers[self.orders[oid].passenger_id].profile.willing_to_pay_extra)
 
         surges = list(self.pricing_engine.get_all_zone_surges().values())
         avg_surge = sum(surges) / len(surges) if surges else 1.0
@@ -470,7 +606,9 @@ class TransportSimulationEngine:
             "online_drivers": online_drivers,
             "idle_drivers": idle_drivers,
             "in_trip_drivers": in_trip_drivers,
+            "pre_dispatched_drivers": pre_dispatched,
             "pending_orders": pending_count,
+            "bidding_orders": bidding_orders,
             "total_orders": self.state.total_orders,
             "completed_orders": self.state.completed_orders,
             "timeout_orders": self.state.timeout_orders,

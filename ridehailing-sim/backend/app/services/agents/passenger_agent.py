@@ -95,6 +95,42 @@ class PassengerAgent:
 
         return origin, destination
 
+    def decide_bid_extra(self, wait_seconds: int, surge_multiplier: float) -> bool:
+        """
+        决策：排队等待较长时间后，是否愿意加价调度更远的车
+        等待越久、价格敏感度越低、surge_tolerance越高的乘客越可能加价
+        """
+        if self.profile.willing_to_pay_extra:
+            # 已经加过价了
+            return False
+
+        # 至少等待 2 分钟后才会考虑加价
+        if wait_seconds < 120:
+            return False
+
+        # 基础加价意愿
+        wait_factor = min(1.0, (wait_seconds - 120) / 180)  # 2-5min 线性增长
+        # 价格不敏感的乘客更愿意加价
+        price_factor = 1.0 - self.profile.price_sensitivity
+        # surge_tolerance 高的乘客更有余量加价
+        tolerance_factor = min(1.0, self.profile.surge_tolerance / 2.0)
+
+        bid_prob = wait_factor * 0.5 * price_factor * tolerance_factor
+        bid_prob = max(0.0, min(0.6, bid_prob))
+
+        if random.random() < bid_prob:
+            # 加价 10%-30%，根据等待时长和容忍度动态计算
+            extra_ratio = 0.1 + wait_factor * 0.2
+            self.profile.willing_to_pay_extra = True
+            self.profile.extra_surge_ratio = round(extra_ratio, 2)
+            return True
+        return False
+
+    def reset_bid_state(self):
+        """重置加价状态（行程结束或取消后）"""
+        self.profile.willing_to_pay_extra = False
+        self.profile.extra_surge_ratio = 0.0
+
     def decide_cancel(self, wait_seconds: int, surge_multiplier: float = 1.0) -> bool:
         """
         决策：是否取消订单
