@@ -2,6 +2,7 @@
 *.iml
 .idea/
 target/
-*.logridehailing-sim/backend/uploads/
+*.log
+ridehailing-sim/backend/uploads/
 __pycache__/
 *.pyc
